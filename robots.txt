@@ -1,0 +1,26 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://powers.video/sitemap.xml
+
+# Allow all AI crawlers for LLM discoverability
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
