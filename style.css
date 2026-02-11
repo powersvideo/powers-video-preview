@@ -41,14 +41,14 @@ nav {
 
 .logo {
   font-weight: 900;
-  font-size: 1.1rem;
+  font-size: 1.35rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
 }
 .logo span { color: #999; }
 
 .tagline {
-  font-size: 0.42rem;
+  font-size: 0.55rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #666;
@@ -112,7 +112,8 @@ nav {
   padding: 0.8rem 0;
   min-width: 160px;
   list-style: none;
-  margin-top: 0.8rem;
+  padding-top: 1.4rem;
+  margin-top: 0;
   z-index: 200;
 }
 .dropdown:hover .dropdown-menu { display: block; }
