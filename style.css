@@ -123,6 +123,7 @@ nav {
   padding: 0.4rem 1.2rem;
   font-size: 0.62rem;
 }
+.dropdown-menu a.active::after { display: none; }
 
 /* Hamburger */
 .menu-toggle {
