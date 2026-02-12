@@ -188,6 +188,8 @@ nav {
   flex-direction: column;
   gap: 2.5rem;
   padding-bottom: 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .video-block { position: relative; }
