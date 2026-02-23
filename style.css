@@ -228,12 +228,15 @@ nav {
 }
 
 .video-desc {
-  font-size: 0.65rem;
-  color: #888;
-  max-width: 450px;
-  text-align: right;
-  line-height: 1.5;
-  flex-shrink: 0;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ═══════════════════════════════════════════
