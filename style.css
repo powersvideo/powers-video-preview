@@ -216,7 +216,6 @@ nav {
   align-items: baseline;
   margin-top: 0.7rem;
   padding-bottom: 1.8rem;
-  border-bottom: 1px solid #2a2a2a;
   gap: 2rem;
 }
 
@@ -523,6 +522,143 @@ footer {
 }
 
 .footer-right a:hover { color: #fff; }
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS (Option I — Everything Animates)
+   ═══════════════════════════════════════════ */
+
+nav {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+}
+
+@keyframes slideDown {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero h1 {
+  overflow: hidden;
+}
+
+.hero h1 .line {
+  display: block;
+  opacity: 0;
+  transform: translateY(100%);
+  animation: lineUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero h1 .line:nth-child(1) { animation-delay: 0.3s; }
+.hero h1 .line:nth-child(2) { animation-delay: 0.45s; }
+.hero h1 .line:nth-child(3) { animation-delay: 0.6s; }
+
+.hero h1:not(:has(.line)) {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: lineUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+}
+
+@keyframes lineUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero .subtitle {
+  opacity: 0;
+  transform: translateY(15px);
+  animation: lineUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+}
+
+.video-block {
+  opacity: 0;
+  transform: scale(0.9) translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.video-block.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.video-wrap {
+  clip-path: inset(6% 6% 6% 6%);
+  transition: clip-path 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+}
+
+.video-block.visible .video-wrap {
+  clip-path: inset(0% 0% 0% 0%);
+}
+
+.video-title {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.5s ease 0.3s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+}
+
+.video-block.visible .video-title {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.video-info {
+  border-bottom: none;
+  position: relative;
+}
+
+.video-info::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #2a2a2a;
+  transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s;
+}
+
+.video-block.visible .video-info::after {
+  width: 100%;
+}
+
+.photo-grid .item {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.photo-grid .item.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.about-content, .contact-content {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: lineUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+}
+
+footer {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+footer.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 1px;
+  background: #fff;
+  z-index: 201;
+  width: 0%;
+  pointer-events: none;
+}
 
 /* ═══════════════════════════════════════════
    RESPONSIVE
