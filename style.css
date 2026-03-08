@@ -513,32 +513,57 @@ nav {
 
 /* Newsletter checkbox */
 .checkbox-group {
-  display: flex;
-  align-items: flex-start;
+  margin-top: 0.5rem;
 }
 
 .checkbox-label {
   display: flex;
-  align-items: flex-start;
-  gap: 0.6rem;
+  align-items: center;
+  gap: 0.8rem;
   cursor: pointer;
-  font-size: 0.75rem;
-  color: #888;
-  line-height: 1.5;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.checkbox-label:hover {
+  color: #999;
 }
 
 .checkbox-label input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  margin-top: 2px;
-  accent-color: #fff;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #2a2a2a;
+  background: #181818;
   cursor: pointer;
   flex-shrink: 0;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+  border-color: #fff;
+  background: #fff;
+}
+
+.checkbox-label input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 9px;
+  border: solid #000;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .checkbox-label span {
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 
 /* ═══════════════════════════════════════════
