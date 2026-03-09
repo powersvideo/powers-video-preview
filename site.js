@@ -60,10 +60,15 @@ const params = new URLSearchParams(window.location.search);
 const formStatus = document.getElementById('form-status');
 if (formStatus && params.get('status')) {
   const success = params.get('status') === 'success';
-  formStatus.className = 'form-status ' + (success ? 'success' : 'error');
-  formStatus.textContent = success
-    ? 'Message sent — I\'ll be in touch soon.'
-    : 'Something went wrong. Please try again or email nathan@powers.video directly.';
+  const form = document.querySelector('.contact-form');
+  if (success && form) {
+    form.style.display = 'none';
+    formStatus.className = 'form-status success';
+    formStatus.innerHTML = '<h2 style="margin:0 0 8px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.15em; color:#888;">Message Sent</h2><p style="margin:0; color:#bbb;">Thanks for reaching out — I\'ll get back to you soon.</p>';
+  } else {
+    formStatus.className = 'form-status error';
+    formStatus.innerHTML = 'Something went wrong. Please try again or email <a href="mailto:nathan@powers.video" style="color:#cc8888; text-decoration:underline;">nathan@powers.video</a> directly.';
+  }
   formStatus.style.display = 'block';
   formStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
   history.replaceState(null, '', window.location.pathname);
