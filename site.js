@@ -55,6 +55,20 @@ if (footerEl) {
   footerObs.observe(footerEl);
 }
 
+// ── Contact Form Status ──
+const params = new URLSearchParams(window.location.search);
+const formStatus = document.getElementById('form-status');
+if (formStatus && params.get('status')) {
+  const success = params.get('status') === 'success';
+  formStatus.className = 'form-status ' + (success ? 'success' : 'error');
+  formStatus.textContent = success
+    ? 'Message sent — I\'ll be in touch soon.'
+    : 'Something went wrong. Please try again or email nathan@powers.video directly.';
+  formStatus.style.display = 'block';
+  formStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  history.replaceState(null, '', window.location.pathname);
+}
+
 // ── Hamburger Menu ──
 const toggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.nav-links');
