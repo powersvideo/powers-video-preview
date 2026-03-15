@@ -8,13 +8,19 @@ if (bar) {
 }
 
 // ── Work Rows: click to expand/collapse ──
+function toggleRow(row) {
+  row.classList.toggle('expanded');
+  const arrow = row.querySelector('.work-arrow');
+  const hint = row.querySelector('.work-hint-text');
+  if (arrow) arrow.textContent = row.classList.contains('expanded') ? '\u2212' : '+';
+  if (hint) hint.textContent = row.classList.contains('expanded') ? '' : 'Watch';
+}
+
 document.querySelectorAll('.work-row').forEach(row => {
-  row.addEventListener('click', () => {
-    row.classList.toggle('expanded');
-    const arrow = row.querySelector('.work-arrow');
-    const hint = row.querySelector('.work-hint-text');
-    if (arrow) arrow.textContent = row.classList.contains('expanded') ? '\u2212' : '+';
-    if (hint) hint.textContent = row.classList.contains('expanded') ? '' : 'Watch';
+  row.addEventListener('click', (e) => {
+    // Don't toggle if clicking inside an expanded iframe
+    if (row.classList.contains('expanded') && e.target.closest('.work-video-inner')) return;
+    toggleRow(row);
   });
 });
 

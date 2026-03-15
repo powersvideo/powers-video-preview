@@ -165,16 +165,16 @@ nav a:hover { opacity: 1; }
 .hero h1 {
   font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(64px, 12vw, 180px);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 0.82;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.04em;
   text-transform: uppercase;
   color: #fff;
 }
 
 .hero h1 .thin {
   font-weight: 300;
-  color: rgba(255,255,255,0.75);
+  color: rgba(255,255,255,0.6);
 }
 
 /* Page-level header (about, contact, etc.) */
@@ -334,6 +334,18 @@ nav a:hover { opacity: 1; }
   width: 100%;
   height: 100%;
   border: none;
+}
+
+/* Block iframe clicks during hover peek — only allow when fully expanded */
+.work-video-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+.work-row.expanded .work-video-inner::before {
+  display: none;
 }
 
 /* ═══════════════════════════════════════════
