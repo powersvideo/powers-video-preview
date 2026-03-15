@@ -163,6 +163,7 @@ nav a:hover { opacity: 1; }
 }
 
 .hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(64px, 12vw, 180px);
   font-weight: 700;
   line-height: 0.82;
@@ -275,7 +276,7 @@ nav a:hover { opacity: 1; }
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Hover: highlight text only (video expands on click) */
+/* Hover: unfurl peek */
 @media (hover: hover) {
   .work-row:not(.expanded):hover .work-title {
     color: #fff;
@@ -284,6 +285,8 @@ nav a:hover { opacity: 1; }
   .work-row:not(.expanded):hover .work-num { color: rgba(255,255,255,0.7); }
   .work-row:not(.expanded):hover .work-hint-text { color: rgba(255,255,255,0.75); }
   .work-row:not(.expanded):hover .work-arrow { color: rgba(255,255,255,0.7); }
+  .work-row:not(.expanded):hover .work-video { max-height: 200px; }
+  .work-row:not(.expanded):hover .work-video::after { opacity: 1; }
 }
 
 /* Expanded */
@@ -302,6 +305,20 @@ nav a:hover { opacity: 1; }
 
 .work-row.expanded .work-video { max-height: 900px; }
 
+
+.work-video::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 48px; right: 0;
+  height: 80px;
+  background: linear-gradient(to top, #050505, transparent);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.work-row.expanded .work-video::after { opacity: 0; }
 
 .work-video-inner {
   aspect-ratio: 16/9;

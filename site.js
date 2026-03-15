@@ -7,26 +7,9 @@ if (bar) {
   }, { passive: true });
 }
 
-// ── Work Rows: lazy-load iframe helper ──
-function loadIframe(row) {
-  const inner = row.querySelector('.work-video-inner');
-  const src = row.dataset.src;
-  if (inner && src && !inner.querySelector('iframe')) {
-    const iframe = document.createElement('iframe');
-    iframe.src = src;
-    iframe.allow = 'autoplay; fullscreen; picture-in-picture';
-    iframe.allowFullscreen = true;
-    iframe.loading = 'lazy';
-    inner.appendChild(iframe);
-  }
-}
-
-// ── Work Rows: hover to peek, click to expand/collapse ──
+// ── Work Rows: click to expand/collapse ──
 document.querySelectorAll('.work-row').forEach(row => {
   row.addEventListener('click', () => {
-    const wasExpanded = row.classList.contains('expanded');
-    if (!wasExpanded) loadIframe(row);
-
     row.classList.toggle('expanded');
     const arrow = row.querySelector('.work-arrow');
     const hint = row.querySelector('.work-hint-text');
