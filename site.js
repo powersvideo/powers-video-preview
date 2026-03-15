@@ -23,9 +23,6 @@ function loadIframe(row) {
 
 // ── Work Rows: hover to peek, click to expand/collapse ──
 document.querySelectorAll('.work-row').forEach(row => {
-  // Load iframe on hover so the peek isn't black
-  row.addEventListener('mouseenter', () => loadIframe(row));
-
   row.addEventListener('click', () => {
     const wasExpanded = row.classList.contains('expanded');
     if (!wasExpanded) loadIframe(row);
