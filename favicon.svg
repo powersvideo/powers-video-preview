@@ -1,4 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" fill="#050505"/>
-  <text x="16" y="27" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="26" letter-spacing="-2" fill="#ffffff" stroke="#050505" stroke-width="0.5">PV</text>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #050505;
+      }
+
+      .st1 {
+        fill: none;
+        stroke: #050505;
+        stroke-width: .5px;
+      }
+
+      .st1, .st2 {
+        font-family: Arial-Black, 'Arial Black';
+        font-size: 19.3px;
+        font-weight: 800;
+        isolation: isolate;
+      }
+
+      .st2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <rect class="st0" x="-1.1" y="-.7" width="34.1" height="34.1"/>
+  <text class="st2" transform="translate(1.5 24.6)"><tspan x="0" y="0">PV</tspan></text>
+  <text class="st1" transform="translate(1.5 24.6)"><tspan x="0" y="0">PV</tspan></text>
 </svg>
