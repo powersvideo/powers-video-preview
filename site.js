@@ -7,24 +7,28 @@ if (bar) {
   }, { passive: true });
 }
 
-// ── Work Rows: click to expand/collapse, lazy-load iframe ──
+// ── Work Rows: lazy-load iframe helper ──
+function loadIframe(row) {
+  const inner = row.querySelector('.work-video-inner');
+  const src = row.dataset.src;
+  if (inner && src && !inner.querySelector('iframe')) {
+    const iframe = document.createElement('iframe');
+    iframe.src = src;
+    iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.loading = 'lazy';
+    inner.appendChild(iframe);
+  }
+}
+
+// ── Work Rows: hover to peek, click to expand/collapse ──
 document.querySelectorAll('.work-row').forEach(row => {
+  // Load iframe on hover so the peek isn't black
+  row.addEventListener('mouseenter', () => loadIframe(row));
+
   row.addEventListener('click', () => {
     const wasExpanded = row.classList.contains('expanded');
-
-    // Lazy-load iframe on first expand
-    if (!wasExpanded) {
-      const inner = row.querySelector('.work-video-inner');
-      const src = row.dataset.src;
-      if (inner && src && !inner.querySelector('iframe')) {
-        const iframe = document.createElement('iframe');
-        iframe.src = src;
-        iframe.allow = 'autoplay; fullscreen; picture-in-picture';
-        iframe.allowFullscreen = true;
-        iframe.loading = 'lazy';
-        inner.appendChild(iframe);
-      }
-    }
+    if (!wasExpanded) loadIframe(row);
 
     row.classList.toggle('expanded');
     const arrow = row.querySelector('.work-arrow');
