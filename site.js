@@ -1,13 +1,3 @@
-// ── Active Nav Link ──
-const page = window.location.pathname.split('/').pop() || 'index.html';
-document.querySelectorAll('.nav-links a').forEach(a => {
-  if (a.getAttribute('href') === page) a.classList.add('active');
-});
-document.querySelectorAll('.dropdown-menu a.active').forEach(a => {
-  const dropdown = a.closest('.dropdown');
-  if (dropdown) dropdown.querySelector('span').style.color = '#fff';
-});
-
 // ── Scroll Progress Bar ──
 const bar = document.querySelector('.scroll-progress');
 if (bar) {
@@ -17,7 +7,34 @@ if (bar) {
   }, { passive: true });
 }
 
-// ── Video Blocks: scroll reveal ──
+// ── Work Rows: click to expand/collapse, lazy-load iframe ──
+document.querySelectorAll('.work-row').forEach(row => {
+  row.addEventListener('click', () => {
+    const wasExpanded = row.classList.contains('expanded');
+
+    // Lazy-load iframe on first expand
+    if (!wasExpanded) {
+      const inner = row.querySelector('.work-video-inner');
+      const src = row.dataset.src;
+      if (inner && src && !inner.querySelector('iframe')) {
+        const iframe = document.createElement('iframe');
+        iframe.src = src;
+        iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+        iframe.allowFullscreen = true;
+        iframe.loading = 'lazy';
+        inner.appendChild(iframe);
+      }
+    }
+
+    row.classList.toggle('expanded');
+    const arrow = row.querySelector('.work-arrow');
+    const hint = row.querySelector('.work-hint-text');
+    if (arrow) arrow.textContent = row.classList.contains('expanded') ? '\u2212' : '+';
+    if (hint) hint.textContent = row.classList.contains('expanded') ? '' : 'Watch';
+  });
+});
+
+// ── Video Blocks: scroll reveal (for category pages) ──
 const videoObs = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
@@ -26,7 +43,6 @@ const videoObs = new IntersectionObserver((entries) => {
     }
   });
 }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
 document.querySelectorAll('.video-block').forEach(block => videoObs.observe(block));
 
 // ── Photo Grid Items: scroll reveal with stagger ──
@@ -38,22 +54,7 @@ const photoObs = new IntersectionObserver((entries) => {
     }
   });
 }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
-
 document.querySelectorAll('.photo-grid .item').forEach(item => photoObs.observe(item));
-
-// ── Footer: scroll reveal ──
-const footerEl = document.querySelector('footer');
-if (footerEl) {
-  const footerObs = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        footerObs.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.3 });
-  footerObs.observe(footerEl);
-}
 
 // ── Contact Form Status ──
 const params = new URLSearchParams(window.location.search);
@@ -64,10 +65,10 @@ if (formStatus && params.get('status')) {
   if (success && form) {
     form.style.display = 'none';
     formStatus.className = 'form-status success';
-    formStatus.innerHTML = '<h2 style="margin:0 0 8px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.15em; color:#888;">Message Sent</h2><p style="margin:0; color:#bbb;">Thanks for reaching out — I\'ll get back to you soon.</p>';
+    formStatus.innerHTML = 'Thank you. I\'ll be in touch shortly.';
   } else {
     formStatus.className = 'form-status error';
-    formStatus.innerHTML = 'Something went wrong. Please try again or email <a href="mailto:nathan@powers.video" style="color:#cc8888; text-decoration:underline;">nathan@powers.video</a> directly.';
+    formStatus.innerHTML = 'Something went wrong. Please try again or email <a href="mailto:nathan@powers.video" style="border-bottom:1px solid rgba(255,255,255,0.3)">nathan@powers.video</a> directly.';
   }
   formStatus.style.display = 'block';
   formStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -76,16 +77,16 @@ if (formStatus && params.get('status')) {
 
 // ── Hamburger Menu ──
 const toggle = document.querySelector('.menu-toggle');
-const nav = document.querySelector('.nav-links');
-if (toggle) {
+const mobileMenu = document.querySelector('.mobile-menu');
+if (toggle && mobileMenu) {
   toggle.addEventListener('click', () => {
     toggle.classList.toggle('open');
-    nav.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
   });
-  nav.querySelectorAll('a').forEach(a => {
+  mobileMenu.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', () => {
       toggle.classList.remove('open');
-      nav.classList.remove('open');
+      mobileMenu.classList.remove('open');
     });
   });
 }
