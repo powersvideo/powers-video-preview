@@ -24,3 +24,8 @@ Allow: /
 
 User-agent: ClaudeBot
 Allow: /
+
+Disallow: /nda
+Disallow: /test-fullbleed
+Disallow: /test-vignette
+Disallow: /index-old
