@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TEST — Vignette Video Hero | Powers Video</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="favicon.png"><link rel="stylesheet" href="style.css">
+  <style>
+    /* Full bleed video hero with vignette */
+    .hero-video {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .hero-video video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: cover;
+    }
+    /* Vignette: fades all edges into the site background */
+    .hero-video::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        /* Top fade — stronger since sky is gray */
+        linear-gradient(to bottom, #050505 0%, transparent 30%),
+        /* Bottom fade into content */
+        linear-gradient(to top, #050505 0%, transparent 35%),
+        /* Left edge */
+        linear-gradient(to right, #050505 0%, transparent 20%),
+        /* Right edge */
+        linear-gradient(to left, #050505 0%, transparent 20%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+<div class="scroll-progress"></div>
+
+<nav>
+  <div class="nav-left">
+    <div class="dropdown">
+      <span>Video</span>
+      <div class="dropdown-menu"><div class="dropdown-menu-inner">
+        <a href="index.html">AI Film</a>
+        <a href="motion.html">Motion</a>
+        <a href="editor.html">Editor</a>
+        <a href="cg-3d.html">3D</a>
+        <a href="sizzles.html">Sizzles</a>
+        <a href="cinematographer.html">DP</a>
+        <a href="director.html">Director</a>
+      </div></div>
+    </div>
+    <div class="dropdown">
+      <span>Photo</span>
+      <div class="dropdown-menu"><div class="dropdown-menu-inner">
+        <a href="product-still-life.html">Product</a>
+        <a href="fashion-photography.html">Fashion</a>
+      </div></div>
+    </div>
+  </div>
+  <div class="nav-center"><a href="index.html">POWERS<span>VIDEO</span></a></div>
+  <div class="nav-right">
+    <a href="about.html">About</a>
+    <a href="discovery.html">Contact</a>
+  </div>
+  <button class="menu-toggle" aria-label="Menu"><span></span><span></span></button>
+</nav>
+
+<div class="mobile-menu">
+  <a href="index.html">Work</a>
+  <a href="motion.html">Motion</a>
+  <a href="product-still-life.html">Photo</a>
+  <a href="about.html">About</a>
+  <a href="discovery.html">Contact</a>
+</div>
+
+<section class="hero-video">
+  <video autoplay muted loop playsinline>
+    <source src="hero-ocean-web.mp4" type="video/mp4">
+  </video>
+</section>
+
+<section class="work-index">
+  <div class="work-index-header">Selected Work</div>
+
+  <div class="work-row expanded" data-src="https://www.youtube.com/embed/A1wRWE2GkMI">
+    <div class="work-num mono">01</div>
+    <div class="work-title">Dogs</div>
+    <div class="work-hint">
+      <span class="work-hint-text"></span>
+      <span class="work-arrow">&minus;</span>
+    </div>
+    <div class="work-video">
+      <div class="work-video-inner">
+        <iframe src="https://www.youtube.com/embed/A1wRWE2GkMI" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-row" data-src="https://www.youtube.com/embed/FQf7Y_sKYnE">
+    <div class="work-num mono">02</div>
+    <div class="work-title">Entrance to Treancia</div>
+    <div class="work-hint">
+      <span class="work-hint-text">Watch</span>
+      <span class="work-arrow">+</span>
+    </div>
+    <div class="work-video">
+      <div class="work-video-inner">
+        <iframe src="https://www.youtube.com/embed/FQf7Y_sKYnE" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-row" data-src="https://player.vimeo.com/video/1110202291?title=0&byline=0&portrait=0">
+    <div class="work-num mono">03</div>
+    <div class="work-title">Faronics</div>
+    <div class="work-hint">
+      <span class="work-hint-text">Watch</span>
+      <span class="work-arrow">+</span>
+    </div>
+    <div class="work-video">
+      <div class="work-video-inner">
+        <iframe src="https://player.vimeo.com/video/1110202291?title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-row" data-src="https://www.youtube.com/embed/ef6IVfoUfoU">
+    <div class="work-num mono">04</div>
+    <div class="work-title">Youth</div>
+    <div class="work-hint">
+      <span class="work-hint-text">Watch</span>
+      <span class="work-arrow">+</span>
+    </div>
+    <div class="work-video">
+      <div class="work-video-inner">
+        <iframe src="https://www.youtube.com/embed/ef6IVfoUfoU" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-row" data-src="https://player.vimeo.com/video/1147831935?title=0&byline=0&portrait=0">
+    <div class="work-num mono">05</div>
+    <div class="work-title">Gemini on Google Maps</div>
+    <div class="work-hint">
+      <span class="work-hint-text">Watch</span>
+      <span class="work-arrow">+</span>
+    </div>
+    <div class="work-video">
+      <div class="work-video-inner">
+        <iframe src="https://player.vimeo.com/video/1147831935?title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-row" data-src="https://player.vimeo.com/video/1094481235?title=0&byline=0&portrait=0">
+    <div class="work-num mono">06</div>
+    <div class="work-title">MetaCell X AI Ad</div>
+    <div class="work-hint">
+      <span class="work-hint-text">Watch</span>
+      <span class="work-arrow">+</span>
+    </div>
+    <div class="work-video">
+      <div class="work-video-inner">
+        <iframe src="https://player.vimeo.com/video/1094481235?title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-row" data-src="https://player.vimeo.com/video/1099846365?title=0&byline=0&portrait=0">
+    <div class="work-num mono">07</div>
+    <div class="work-title">JH Insurance</div>
+    <div class="work-hint">
+      <span class="work-hint-text">Watch</span>
+      <span class="work-arrow">+</span>
+    </div>
+    <div class="work-video">
+      <div class="work-video-inner">
+        <iframe src="https://player.vimeo.com/video/1099846365?title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-row" data-src="https://player.vimeo.com/video/1147847031?title=0&byline=0&portrait=0">
+    <div class="work-num mono">08</div>
+    <div class="work-title">Gemini in Google Lens</div>
+    <div class="work-hint">
+      <span class="work-hint-text">Watch</span>
+      <span class="work-arrow">+</span>
+    </div>
+    <div class="work-video">
+      <div class="work-video-inner">
+        <iframe src="https://player.vimeo.com/video/1147847031?title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-row" data-src="https://player.vimeo.com/video/1095344861?title=0&byline=0&portrait=0">
+    <div class="work-num mono">09</div>
+    <div class="work-title">MetaCell X Explainer</div>
+    <div class="work-hint">
+      <span class="work-hint-text">Watch</span>
+      <span class="work-arrow">+</span>
+    </div>
+    <div class="work-video">
+      <div class="work-video-inner">
+        <iframe src="https://player.vimeo.com/video/1095344861?title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-row" data-src="https://player.vimeo.com/video/1093425937?title=0&byline=0&portrait=0">
+    <div class="work-num mono">10</div>
+    <div class="work-title">Remedy Fund Explainer</div>
+    <div class="work-hint">
+      <span class="work-hint-text">Watch</span>
+      <span class="work-arrow">+</span>
+    </div>
+    <div class="work-video">
+      <div class="work-video-inner">
+        <iframe src="https://player.vimeo.com/video/1093425937?title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-row" data-src="https://player.vimeo.com/video/1146469452?title=0&byline=0&portrait=0">
+    <div class="work-num mono">11</div>
+    <div class="work-title">Milrose Holiday Video</div>
+    <div class="work-hint">
+      <span class="work-hint-text">Watch</span>
+      <span class="work-arrow">+</span>
+    </div>
+    <div class="work-video">
+      <div class="work-video-inner">
+        <iframe src="https://player.vimeo.com/video/1146469452?title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="statement">
+  <p>
+    <strong>Fifteen years</strong> producing for
+    Coca&#8209;Cola, Google, Budweiser, Tiffany&nbsp;&amp;&nbsp;Co., Meta, and NASA.
+    Every discipline. Every medium. Now converging on AI.
+  </p>
+</section>
+
+<section class="cta-section">
+  <h2>Let&rsquo;s make<br>something.</h2>
+  <p>AI video production, motion graphics, 3D animation, and creative direction.</p>
+  <a href="discovery.html" class="pg-btn">Start a project</a>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>Powers Video</h3>
+      <p>AI filmmaker Nathan Bush. Broadcast-quality video ads, brand films, and commercial content. 15 years of New York advertising craft meets generative AI.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <a href="index.html">AI Video</a>
+      <a href="motion.html">Motion Graphics</a>
+      <a href="editor.html">Video Editing</a>
+      <a href="cg-3d.html">3D Animation</a>
+      <a href="product-still-life.html">Photography</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="about.html">About</a>
+      <a href="index.html">Work</a>
+      <a href="discovery.html">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <a href="https://www.youtube.com/@PowersVideoAI" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://instagram.com/powersvideo" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://linkedin.com/in/powersvideo" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:nathan@powers.video">Email</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Powers Video</span>
+    <span class="footer-bottom-center">New York City</span>
+    <span class="footer-bottom-right"><a href="mailto:nathan@powers.video">nathan@powers.video</a></span>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
