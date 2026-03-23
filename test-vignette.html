@@ -42,6 +42,14 @@
         linear-gradient(to left, #050505 0%, transparent 20%);
       pointer-events: none;
     }
+    /* Nav logo hidden at top, fades in as you scroll past the hero video */
+    .nav-center {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .nav-center.visible {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -299,5 +307,25 @@
 </footer>
 
 <script src="site.js"></script>
+<script>
+  // Fade in nav logo after scrolling past the hero video
+  (function() {
+    const navCenter = document.querySelector('.nav-center');
+    const hero = document.querySelector('.hero-video');
+    if (!navCenter || !hero) return;
+
+    function checkScroll() {
+      const heroBottom = hero.offsetHeight * 0.7; // fade in at ~70% through hero
+      if (window.scrollY > heroBottom) {
+        navCenter.classList.add('visible');
+      } else {
+        navCenter.classList.remove('visible');
+      }
+    }
+
+    window.addEventListener('scroll', checkScroll, { passive: true });
+    checkScroll();
+  })();
+</script>
 </body>
 </html>
