@@ -46,6 +46,19 @@ const photoObs = new IntersectionObserver((entries) => {
 }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.photo-grid .item').forEach(item => photoObs.observe(item));
 
+// ── Honeypot spam filter ──
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+  contactForm.addEventListener('submit', function(e) {
+    const honeypot = contactForm.querySelector('input[name="website"]');
+    if (honeypot && honeypot.value) {
+      e.preventDefault();
+      // Fake success so bot thinks it worked
+      window.location.search = '?status=success';
+    }
+  });
+}
+
 // ── Contact Form Status ──
 const params = new URLSearchParams(window.location.search);
 const formStatus = document.getElementById('form-status');

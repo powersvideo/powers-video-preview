@@ -129,6 +129,8 @@
 
   <div id="form-status" class="form-status" style="display:none;"></div>
   <form class="contact-form" action="https://powers-contact-form.nathan-480.workers.dev" method="POST">
+    <!-- Honeypot: hidden from humans, bots fill it in and get rejected -->
+    <input type="text" name="website" style="position:absolute;left:-9999px;top:-9999px;opacity:0;height:0;width:0;" tabindex="-1" autocomplete="off">
     <div class="form-row">
       <div class="form-group">
         <label for="first-name">First Name</label>
