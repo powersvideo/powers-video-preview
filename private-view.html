@@ -50,6 +50,32 @@
     @media (max-width: 768px) {
       .access-note { margin: 0 20px 8px; padding: 18px 20px; }
     }
+
+    /* Row 04 — the wall: 26 six-second spots playing in lockstep */
+    .wall-row.expanded .work-video { max-height: 6000px; }
+    .wall-inner { margin: 0 0 24px 48px; width: calc(100% - 48px); cursor: default; }
+    .wall-meta {
+      display: flex; gap: 28px; margin: 4px 0 18px;
+      font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .wall { columns: 8 132px; column-gap: 6px; }
+    .wall .tile {
+      display: block; width: 100%; margin: 0 0 6px;
+      break-inside: avoid; background: #0a0a0a; object-fit: cover;
+    }
+    .wall .tile.v { aspect-ratio: 9 / 16; }
+    .wall .tile.h { aspect-ratio: 16 / 9; }
+    .wall-caption {
+      margin-top: 18px; max-width: 560px;
+      font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.45);
+    }
+    @media (max-width: 768px) {
+      .wall-inner { margin-left: 0; width: 100%; }
+      .wall { columns: 3 96px; column-gap: 4px; }
+      .wall .tile { margin-bottom: 4px; }
+      .wall-meta { gap: 18px; }
+    }
   </style>
 </head>
 <body>
@@ -159,6 +185,49 @@
     </div>
   </div>
 
+  <div class="work-row wall-row expanded">
+    <div class="work-num mono">04</div>
+    <div class="work-title">One system, twenty-six spots</div>
+    <div class="work-hint">
+      <span class="work-hint-text"></span>
+      <span class="work-arrow">&minus;</span>
+    </div>
+    <div class="work-video">
+      <div class="wall-inner">
+        <div class="wall-meta mono"><span>26 &times; :06</span><span>16:9 + 9:16</span><span>One brief</span></div>
+        <div class="wall" id="wall">
+          <video class="tile h" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w01.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w01.mp4" aria-label="Spot 01"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w02.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w02.mp4" aria-label="Spot 02"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w03.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w03.mp4" aria-label="Spot 03"></video>
+          <video class="tile h" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w04.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w04.mp4" aria-label="Spot 04"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w05.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w05.mp4" aria-label="Spot 05"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w06.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w06.mp4" aria-label="Spot 06"></video>
+          <video class="tile h" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w07.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w07.mp4" aria-label="Spot 07"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w08.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w08.mp4" aria-label="Spot 08"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w09.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w09.mp4" aria-label="Spot 09"></video>
+          <video class="tile h" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w10.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w10.mp4" aria-label="Spot 10"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w11.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w11.mp4" aria-label="Spot 11"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w12.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w12.mp4" aria-label="Spot 12"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w13.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w13.mp4" aria-label="Spot 13"></video>
+          <video class="tile h" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w14.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w14.mp4" aria-label="Spot 14"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w15.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w15.mp4" aria-label="Spot 15"></video>
+          <video class="tile h" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w16.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w16.mp4" aria-label="Spot 16"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w17.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w17.mp4" aria-label="Spot 17"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w18.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w18.mp4" aria-label="Spot 18"></video>
+          <video class="tile h" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w19.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w19.mp4" data-offset="3.75" aria-label="Spot 19"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w20.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w20.mp4" data-offset="3.75" aria-label="Spot 20"></video>
+          <video class="tile h" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w21.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w21.mp4" data-offset="3.75" aria-label="Spot 21"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w22.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w22.mp4" data-offset="3.75" aria-label="Spot 22"></video>
+          <video class="tile h" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w23.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w23.mp4" data-offset="3.75" aria-label="Spot 23"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w24.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w24.mp4" data-offset="3.75" aria-label="Spot 24"></video>
+          <video class="tile h" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w25.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w25.mp4" data-offset="3.75" aria-label="Spot 25"></video>
+          <video class="tile v" muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w26.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w26.mp4" data-offset="3.75" aria-label="Spot 26"></video>
+        </div>
+        <p class="wall-caption">Every tile is a finished, delivered social spot. Once a loop, all twenty-six land on the same beat &mdash; one visual grammar carried across two formats and every product in the line.</p>
+      </div>
+    </div>
+  </div>
+
 </section>
 
 <section class="cta-section">
@@ -203,5 +272,57 @@
 </footer>
 
 <script src="site.js"></script>
+<script>
+// Wall: 26 six-second spots on one master clock. Tiles load lazily, play only
+// while on screen, and seek to (clock + their offset) whenever they enter view,
+// so the wall stays in step without any single tile leading.
+(function () {
+  const wall = document.getElementById('wall'); if (!wall) return;
+  const tiles = Array.from(wall.querySelectorAll('video'));
+  const LOOP = 6, off = v => parseFloat(v.dataset.offset || 0);
+  let t0 = null, armed = false;
+  const clock = () => t0 === null ? 0 : ((performance.now() - t0) / 1000) % LOOP;
+  const want  = v => (clock() + off(v)) % LOOP;
+  const inView = new Set();
+
+  // clicks on the wall shouldn't collapse the row
+  wall.closest('.wall-inner').addEventListener('click', e => e.stopPropagation());
+
+  const seekPlay = v => { try { v.currentTime = want(v); } catch (e) {} v.play().catch(() => {}); };
+
+  function arm () {
+    if (armed) return; armed = true;
+    tiles.forEach(v => { v.src = v.dataset.src; v.load(); });
+    const ready = v => v.readyState >= 3 ? Promise.resolve()
+      : new Promise(r => v.addEventListener('canplay', r, { once: true }));
+    Promise.race([Promise.all(tiles.map(ready)), new Promise(r => setTimeout(r, 5000))])
+      .then(() => { t0 = performance.now(); inView.forEach(seekPlay); });
+  }
+
+  // fetch everything once the wall is near
+  new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { arm(); o.disconnect(); } }),
+    { rootMargin: '600px 0px' }).observe(wall);
+
+  // play only the tiles actually on screen
+  const tileIO = new IntersectionObserver(es => es.forEach(e => {
+    const v = e.target;
+    if (e.isIntersecting) { inView.add(v); if (t0 !== null) seekPlay(v); }
+    else { inView.delete(v); v.pause(); }
+  }), { rootMargin: '120px 0px' });
+  tiles.forEach(v => tileIO.observe(v));
+
+  // nudge any playing tile that drifts off the clock
+  setInterval(() => {
+    if (t0 === null || document.hidden) return;
+    inView.forEach(v => {
+      if (v.paused) { seekPlay(v); return; }   // the browser paused it (power save, decoder cap) — try again
+      let d = Math.abs(v.currentTime - want(v)); if (d > LOOP / 2) d = LOOP - d;
+      if (d > 0.12) v.currentTime = want(v);
+    });
+  }, 3000);
+
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && t0 !== null) inView.forEach(seekPlay); });
+})();
+</script>
 </body>
 </html>
