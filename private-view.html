@@ -100,6 +100,20 @@
       .trio { gap: 4px; max-width: none; }
       .snd { left: 6px; bottom: 6px; font-size: 8px; letter-spacing: 0.15em; padding: 3px 5px; }
     }
+
+    /* Process note — one line covering rows 05–06 */
+    .process-note {
+      margin: 0 0 0 48px; width: calc(100% - 48px);
+      padding: 32px 0 8px; display: flex; gap: 28px; align-items: baseline;
+    }
+    .process-label {
+      font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.25em;
+      text-transform: uppercase; color: rgba(255,255,255,0.5); white-space: nowrap;
+    }
+    .process-note p { margin: 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.72); max-width: 560px; }
+    @media (max-width: 768px) {
+      .process-note { margin-left: 0; width: 100%; flex-direction: column; gap: 10px; padding-top: 24px; }
+    }
   </style>
 </head>
 <body>
@@ -289,6 +303,11 @@
         <p class="wall-caption">Three directions off one brief, cut for vertical social. Shown as a set &mdash; the range is the point.</p>
       </div>
     </div>
+  </div>
+
+  <div class="process-note">
+    <span class="process-label">Process</span>
+    <p>Everything in 05 and 06 is 100% AI-generated. The only human part is the edit.</p>
   </div>
 
 </section>
