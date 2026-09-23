@@ -76,6 +76,30 @@
       .wall .tile { margin-bottom: 4px; }
       .wall-meta { gap: 18px; }
     }
+
+    /* Rows 05–06 — self-hosted loops, tap for sound (one at a time) */
+    .loop-row.expanded .work-video, .trio-row.expanded .work-video { max-height: 1600px; }
+    .row-inner { margin: 0 0 24px 48px; width: calc(100% - 48px); cursor: default; }
+    .loop-frame { position: relative; aspect-ratio: 16 / 9; background: #0a0a0a; overflow: hidden; }
+    .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-width: 720px; }
+    .trio-cell { position: relative; aspect-ratio: 9 / 16; background: #0a0a0a; overflow: hidden; }
+    .loop-frame video, .trio-cell video {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block; cursor: pointer;
+    }
+    .snd {
+      position: absolute; left: 12px; bottom: 10px; z-index: 2; pointer-events: none;
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(255,255,255,0.85); padding: 4px 8px;
+      background: rgba(0,0,0,0.38); backdrop-filter: blur(4px);
+      transition: background 0.3s, color 0.3s;
+    }
+    .snd.on { color: #fff; background: rgba(255,255,255,0.2); }
+    @media (max-width: 768px) {
+      .row-inner { margin-left: 0; width: 100%; }
+      .trio { gap: 4px; max-width: none; }
+      .snd { left: 6px; bottom: 6px; font-size: 8px; letter-spacing: 0.15em; padding: 3px 5px; }
+    }
   </style>
 </head>
 <body>
@@ -228,6 +252,45 @@
     </div>
   </div>
 
+  <div class="work-row loop-row expanded">
+    <div class="work-num mono">05</div>
+    <div class="work-title">Booth loop</div>
+    <div class="work-hint">
+      <span class="work-hint-text"></span>
+      <span class="work-arrow">&minus;</span>
+    </div>
+    <div class="work-video">
+      <div class="row-inner">
+        <div class="wall-meta mono"><span>:15</span><span>16:9</span><span>Loops</span></div>
+        <div class="loop-frame">
+          <video muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/r05.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/r05.mp4" aria-label="Conference booth loop"></video>
+          <span class="snd mono">Tap for sound</span>
+        </div>
+        <p class="wall-caption">Made for a large screen on a conference floor. It runs all day on a loop and has one job: pull people across the hall to the booth.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="work-row trio-row expanded">
+    <div class="work-num mono">06</div>
+    <div class="work-title">One brief, three cuts</div>
+    <div class="work-hint">
+      <span class="work-hint-text"></span>
+      <span class="work-arrow">&minus;</span>
+    </div>
+    <div class="work-video">
+      <div class="row-inner">
+        <div class="wall-meta mono"><span>3 &times; 9:16</span><span>Social</span><span>One brief</span></div>
+        <div class="trio">
+          <div class="trio-cell"><video muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/r06a.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/r06a.mp4" aria-label="Cut one"></video><span class="snd mono">Tap for sound</span></div>
+          <div class="trio-cell"><video muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/r06b.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/r06b.mp4" aria-label="Cut two"></video><span class="snd mono">Tap for sound</span></div>
+          <div class="trio-cell"><video muted playsinline loop preload="none" poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/r06c.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/r06c.mp4" aria-label="Cut three"></video><span class="snd mono">Tap for sound</span></div>
+        </div>
+        <p class="wall-caption">Three directions off one brief, cut for vertical social. Shown as a set &mdash; the range is the point.</p>
+      </div>
+    </div>
+  </div>
+
 </section>
 
 <section class="cta-section">
@@ -322,6 +385,36 @@
   }, 3000);
 
   document.addEventListener('visibilitychange', () => { if (!document.hidden && t0 !== null) inView.forEach(seekPlay); });
+})();
+</script>
+<script>
+// Rows 05–06: muted loops that load when near, play only while on screen,
+// and unmute on tap — one sounding at a time. Taps never collapse the row.
+(function () {
+  const vids = Array.from(document.querySelectorAll('.loop-row video, .trio-row video'));
+  if (!vids.length) return;
+  new Set(vids.map(v => v.closest('.work-video'))).forEach(w => w.addEventListener('click', e => e.stopPropagation()));
+
+  const paint = v => {
+    const l = v.parentElement.querySelector('.snd'); if (!l) return;
+    l.textContent = v.muted ? 'Tap for sound' : 'Sound on';
+    l.classList.toggle('on', !v.muted);
+  };
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    const v = e.target;
+    if (e.isIntersecting) { if (!v.src) { v.src = v.dataset.src; v.load(); } v.play().catch(() => {}); }
+    else { v.pause(); if (!v.muted) { v.muted = true; paint(v); } }
+  }), { rootMargin: '300px 0px' });
+
+  vids.forEach(v => {
+    paint(v); io.observe(v);
+    v.addEventListener('click', () => {
+      const wasMuted = v.muted;
+      vids.forEach(o => { if (o !== v && !o.muted) { o.muted = true; paint(o); } });
+      v.muted = !wasMuted; paint(v);
+      if (v.paused) v.play().catch(() => {});
+    });
+  });
 })();
 </script>
 </body>
