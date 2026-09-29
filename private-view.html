@@ -53,8 +53,14 @@
 
     /* Shared meta line + caption for rows 04–05 */
     .wall-meta {
+      display: flex; gap: 28px; margin: 4px 0 18px;
+      font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
     .wall-caption {
-      .wall-meta { gap: 18px; }
+      margin-top: 18px; max-width: 560px;
+      font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.45);
+    }
     @media (max-width: 768px) {
       .wall-meta { gap: 18px; }
     }
