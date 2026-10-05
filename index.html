@@ -66,27 +66,35 @@
       display: grid; place-items: center;
       opacity: 0; visibility: hidden; will-change: opacity;
     }
-    /* the reel: a slim bar (sound button, title) above the 16:9 frame */
+    /* the reel: a 16:9 frame with room round it for the glow, and the sound button riding
+       just above its top-left corner (placed by the glow script, so it follows the frame) */
     .hero-reel .reel-box {
-      position: relative;
-      width: min(calc(100vw - 64px), calc((100vh - 220px) * 16 / 9));
-      width: min(calc(100vw - 64px), calc((100svh - 220px) * 16 / 9));
+      position: relative; z-index: 1;
+      width: min(calc(100vw - 200px), calc((100vh - 290px) * 16 / 9));
+      width: min(calc(100vw - 200px), calc((100svh - 290px) * 16 / 9));
       will-change: transform;
     }
-    .hero-reel .reel-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+    .hero-reel > .reel-bar { position: absolute; left: 0; top: 0; z-index: 3; display: flex; align-items: center; gap: 16px; }
     .hero-reel .reel-frame {
-      position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: #000;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.06); cursor: pointer;
+      position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: #000; cursor: pointer;
+    }
+    /* the glow: soft, uneven white light round the frame that grows as the reel fades in
+       (WebGL, drawn above the reel but clear over the picture; a thin bright rim keeps the
+       edge visible on black frames). Without WebGL a plain CSS glow stands in. */
+    .hero-reel .reel-glow { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+    .no-glow .hero-reel .reel-glow { display: none; }
+    .no-glow .hero-reel .reel-frame {
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.3), 0 0 50px 6px rgba(255,255,255,0.16), 0 0 160px 40px rgba(255,255,255,0.07);
     }
     .hero-reel video { display: block; width: 100%; height: 100%; object-fit: cover; }
     /* sound: Sound on / Mute sits right above the picture, top left */
     .hero-reel .reel-sound {
       display: inline-flex; align-items: center; gap: 11px; padding: 10px 16px 10px 13px;
       font: 11px/1 'Space Mono', monospace; letter-spacing: 0.2em; text-transform: uppercase;
-      color: #fff; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.34);
+      color: #fff; background: rgba(5,5,5,0.72); border: 1px solid rgba(255,255,255,0.34);
       border-radius: 999px; cursor: pointer; transition: color 0.25s, background 0.25s, border-color 0.25s;
     }
-    @media (hover: hover) { .hero-reel .reel-sound:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.7); } }
+    @media (hover: hover) { .hero-reel .reel-sound:hover { background: rgba(28,28,28,0.9); border-color: rgba(255,255,255,0.7); } }
     .hero-reel .reel-sound .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
     .hero-reel .reel-sound .eq i {
       display: block; width: 2px; height: 100%; border-radius: 1px; background: #ff5a1f;
@@ -141,10 +149,9 @@
     }
     @media (max-width: 900px) {
       .hero-reel .reel-box {
-        width: min(100vw, calc((100vh - 150px) * 16 / 9));
-        width: min(100vw, calc((100svh - 150px) * 16 / 9));
+        width: min(calc(100vw - 48px), calc((100vh - 190px) * 16 / 9));
+        width: min(calc(100vw - 48px), calc((100svh - 190px) * 16 / 9));
       }
-      .hero-reel .reel-bar { padding: 0 16px; }
     }
     @media (max-width: 768px) { .hero-pin { height: 60vh; } }
     .handoff .hero-stage { height: 300vh; height: 300svh; }
@@ -327,15 +334,16 @@
     </div>
     <div class="hero-reel">
       <div class="reel-box">
-        <div class="reel-bar">
-          <button class="reel-sound" type="button" title="Sound on (M)"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl">Sound on</span></button>
-        </div>
         <div class="reel-frame">
           <video class="reel" muted playsinline loop preload="auto" aria-label="Powers Video showreel">
             <source src="reel/powers-video-showreel-web.mp4" type="video/mp4">
           </video>
           <span class="reel-tip" aria-hidden="true">Click for sound</span>
         </div>
+      </div>
+      <canvas class="reel-glow" aria-hidden="true"></canvas>
+      <div class="reel-bar">
+        <button class="reel-sound" type="button" title="Sound on (M)"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl">Sound on</span></button>
       </div>
     </div>
     <div class="hero-shade"></div>
@@ -831,6 +839,117 @@
     document.addEventListener('visibilitychange', () => { if (document.hidden && !v.paused) v.pause(); queue(); });
     ui();
     update();
+  })();
+
+  // The glow round the reel. Soft light, so it renders into a half-resolution WebGL canvas
+  // that costs next to nothing, and only while the reel is on screen. It reads the handoff's
+  // own numbers (the reel's opacity, the shade over it), so it grows, shrinks and reverses
+  // with the scroll like the rest of the hero. It also keeps the sound button just above
+  // the frame's top-left corner.
+  (function () {
+    const stage = document.querySelector('.hero-stage'); if (!stage) return;
+    const wrap = stage.querySelector('.hero-reel'), frame = wrap.querySelector('.reel-frame');
+    const rbar = wrap.querySelector('.reel-bar'), shade = stage.querySelector('.hero-shade');
+    const c = wrap.querySelector('.reel-glow');
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function placeBar() {
+      const cr = wrap.getBoundingClientRect(), fr = frame.getBoundingClientRect();
+      rbar.style.transform = 'translate(' + Math.round(fr.left - cr.left) + 'px,' + Math.round(fr.top - cr.top - rbar.offsetHeight - 20) + 'px)';
+    }
+
+    let gl = null, u = {};
+    try {
+      gl = c.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, stencil: false });
+      if (gl) {
+        const VS = 'attribute vec2 a; void main() { gl_Position = vec4(a, 0., 1.); }';
+        // white light round the frame. Its reach wanders along the edges (two slow noise
+        // fields), so it never reads as a CSS shadow; a thin bright lip draws the edge itself
+        const FS = `
+          #ifdef GL_FRAGMENT_PRECISION_HIGH
+          precision highp float;
+          #else
+          precision mediump float;
+          #endif
+          uniform vec2 uRes; uniform vec4 uRect; uniform float uTime, uK, uUp, uCover, uScale;
+          float hash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+          float noise(vec2 p) {
+            vec2 i = floor(p), f = fract(p), u = f * f * (3. - 2. * f);
+            return mix(mix(hash(i), hash(i + vec2(1., 0.)), u.x), mix(hash(i + vec2(0., 1.)), hash(i + vec2(1., 1.)), u.x), u.y);
+          }
+          float fbm(vec2 p) { float s = 0., a = .5; for (int i = 0; i < 4; i++) { s += a * noise(p); p = p * 2.03 + vec2(17.1, 9.2); a *= .5; } return s; }
+          float sdBox(vec2 p, vec2 b) { vec2 d = abs(p) - b; return length(max(d, 0.)) + min(max(d.x, d.y), 0.); }
+          void main() {
+            vec2 p = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y);
+            vec2 c = (uRect.xy + uRect.zw) * .5, b = (uRect.zw - uRect.xy) * .5;
+            float d = sdBox(p - c, b) / uK;
+            if (d <= 0.) { gl_FragColor = vec4(0.); return; }
+            vec2 q = p / uK / (260. * uScale);
+            float t = uTime * .06;
+            float n1 = fbm(q + vec2(t, -.7 * t));
+            float n2 = fbm(q * 1.9 + vec2(-.6 * t, .4 * t) + 3.7);
+            float grow = uUp * (1. - .5 * uCover);
+            float reach = mix(24., 165., n1 * n1 * 1.5) * uScale * (.2 + .8 * grow);
+            float halo = exp(-d / reach) * (.5 + .65 * n2);
+            float rim = exp(-d / 3.5) * .45;
+            float a = clamp((.36 * halo + rim) * grow + (hash(gl_FragCoord.xy) - .5) / 255., 0., 1.);
+            gl_FragColor = vec4(vec3(1., .992, .978) * a, a);
+          }`;
+        const sh = (type, src) => {
+          const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+          if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+          return s;
+        };
+        const pr = gl.createProgram();
+        gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS));
+        gl.linkProgram(pr);
+        if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(pr));
+        gl.useProgram(pr);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+        const loc = gl.getAttribLocation(pr, 'a');
+        gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+        ['uRes', 'uRect', 'uTime', 'uK', 'uUp', 'uCover', 'uScale'].forEach((n) => { u[n] = gl.getUniformLocation(pr, n); });
+      }
+    } catch (e) { gl = null; }
+    if (!gl) document.documentElement.classList.add('no-glow');
+
+    const t0 = performance.now();
+    function draw(now) {
+      const cr = wrap.getBoundingClientRect(), fr = frame.getBoundingClientRect();
+      const k = (window.devicePixelRatio || 1) > 1.5 ? 0.75 : 0.5;     // backing pixels per CSS pixel
+      const W = Math.max(2, Math.round(cr.width * k)), H = Math.max(2, Math.round(cr.height * k));
+      if (c.width !== W || c.height !== H) { c.width = W; c.height = H; }
+      const x0 = fr.left - cr.left, y0 = fr.top - cr.top, x1 = fr.right - cr.left, y1 = fr.bottom - cr.top;
+      gl.viewport(0, 0, W, H);
+      gl.uniform2f(u.uRes, W, H);
+      gl.uniform4f(u.uRect, x0 * k, y0 * k, x1 * k, y1 * k);
+      gl.uniform1f(u.uTime, still ? 0 : (now - t0) / 1000);
+      gl.uniform1f(u.uK, k);
+      gl.uniform1f(u.uUp, parseFloat(wrap.style.opacity) || 0);
+      gl.uniform1f(u.uCover, Math.min(1, (parseFloat(shade.style.opacity) || 0) / 0.8));
+      gl.uniform1f(u.uScale, Math.max(0.35, Math.min(1.25, (x1 - x0) / 1100)));
+      gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+    let raf = 0;
+    function loop(now) {
+      raf = 0;
+      if (wrap.style.visibility === 'hidden' || document.hidden) return;   // a scroll wakes it again
+      placeBar();
+      if (!gl) return;
+      draw(now);
+      // keep the light drifting only while the reel can be seen (not once the work covers it)
+      const covered = (parseFloat(shade.style.opacity) || 0) >= 0.799 || stage.getBoundingClientRect().bottom <= 0;
+      if (!still && !covered) raf = requestAnimationFrame(loop);
+    }
+    const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
+    // on scroll, queue behind the handoff's own update so both read the same frame
+    addEventListener('scroll', () => { if (raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); }, { passive: true });
+    addEventListener('resize', kick);
+    addEventListener('pageshow', kick);
+    document.addEventListener('visibilitychange', kick);
+    kick();
   })();
 </script>
 </body>
