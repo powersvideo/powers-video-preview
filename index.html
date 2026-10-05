@@ -168,6 +168,44 @@
       .handoff .hero-pin .hero-video { top: 50%; bottom: auto; height: 100vw; margin-top: -50vw; }
     }
     @media (prefers-reduced-motion: reduce) { .hero-cue i { animation: none; } }
+    /* under the reel: "See the work", a light dropping down a hairline onto a chevron that
+       nudges as it lands. Fades in once the reel is up, out as the work slides over; a click
+       takes you to the work. (Placed and faded by the glow script.) */
+    .reel-cue {
+      position: absolute; left: 0; top: 0; z-index: 3; display: none;
+      flex-direction: column; align-items: center; gap: 12px; padding: 6px 14px 8px;
+      font: 11px/1 'Space Mono', monospace; letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(255,255,255,0.75); text-decoration: none; opacity: 0; transition: color 0.25s;
+    }
+    .handoff .reel-cue { display: flex; }
+    .reel-cue span { padding-left: 0.3em; }
+    .reel-cue .track { position: relative; width: 1px; height: 44px; overflow: hidden; background: rgba(255,255,255,0.16); }
+    .reel-cue .track::before {
+      content: ''; position: absolute; left: 0; top: 0; width: 1px; height: 16px;
+      background: linear-gradient(rgba(255,255,255,0), #fff);
+      animation: reel-cue-drop 2.2s cubic-bezier(0.7, 0, 0.3, 1) infinite;
+    }
+    .reel-cue .chev {
+      width: 9px; height: 9px; margin-top: -10px;
+      border-right: 1px solid rgba(255,255,255,0.75); border-bottom: 1px solid rgba(255,255,255,0.75);
+      transform: rotate(45deg); animation: reel-cue-chev 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+    @keyframes reel-cue-drop {
+      0%   { transform: translateY(-16px); opacity: 0; }
+      15%  { opacity: 1; }
+      62%  { transform: translateY(44px); opacity: 1; }
+      100% { transform: translateY(44px); opacity: 0; }
+    }
+    @keyframes reel-cue-chev {
+      0%, 58% { transform: translateY(0) rotate(45deg); opacity: 0.55; }
+      70%     { transform: translateY(4px) rotate(45deg); opacity: 1; }
+      100%    { transform: translateY(0) rotate(45deg); opacity: 0.55; }
+    }
+    @media (hover: hover) { .reel-cue:hover { color: #fff; } }
+    @media (prefers-reduced-motion: reduce) {
+      .reel-cue .track::before { animation: none; transform: translateY(22px); }
+      .reel-cue .chev { animation: none; }
+    }
     /* Nav logo hidden at top, fades in as you scroll past the hero video */
     .nav-center {
       opacity: 0;
@@ -342,6 +380,7 @@
         </div>
       </div>
       <canvas class="reel-glow" aria-hidden="true"></canvas>
+      <a class="reel-cue" href="#work"><span>See the work</span><i class="track" aria-hidden="true"></i><i class="chev" aria-hidden="true"></i></a>
       <div class="reel-bar">
         <button class="reel-sound" type="button" title="Sound on (M)"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl">Sound on</span></button>
       </div>
@@ -351,7 +390,7 @@
   </div>
 </section>
 
-<section class="work-index">
+<section class="work-index" id="work">
   <div class="work-index-header">Selected Work</div>
 
   <div class="work-row expanded" data-src="https://www.youtube.com/embed/A1wRWE2GkMI">
@@ -850,13 +889,28 @@
     const stage = document.querySelector('.hero-stage'); if (!stage) return;
     const wrap = stage.querySelector('.hero-reel'), frame = wrap.querySelector('.reel-frame');
     const rbar = wrap.querySelector('.reel-bar'), shade = stage.querySelector('.hero-shade');
-    const c = wrap.querySelector('.reel-glow');
+    const c = wrap.querySelector('.reel-glow'), cue = wrap.querySelector('.reel-cue');
+    const sheet = document.querySelector('.work-index');
     const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ramp = (x, a, b) => Math.max(0, Math.min(1, (x - a) / (b - a)));
 
     function placeBar() {
       const cr = wrap.getBoundingClientRect(), fr = frame.getBoundingClientRect();
       rbar.style.transform = 'translate(' + Math.round(fr.left - cr.left) + 'px,' + Math.round(fr.top - cr.top - rbar.offsetHeight - 20) + 'px)';
+      // "See the work": centred in the dark below the frame, once the reel is fully up
+      const below = cr.bottom - fr.bottom, ch = cue.offsetHeight;
+      const y = fr.bottom - cr.top + Math.max(18, (below - ch) / 2);
+      cue.style.transform = 'translate(' + Math.round((fr.left + fr.right) / 2 - cr.left - cue.offsetWidth / 2) + 'px,' + Math.round(y) + 'px)';
+      const up = parseFloat(wrap.style.opacity) || 0, cover = Math.min(1, (parseFloat(shade.style.opacity) || 0) / 0.8);
+      const a = ramp(up, 0.85, 1) * (1 - ramp(cover, 0.02, 0.2));
+      cue.style.opacity = a.toFixed(3);
+      cue.style.pointerEvents = a > 0.5 ? 'auto' : 'none';
     }
+    cue.addEventListener('click', (e) => {
+      if (!sheet) return;
+      e.preventDefault();
+      scrollTo({ top: window.scrollY + sheet.getBoundingClientRect().top, behavior: still ? 'auto' : 'smooth' });
+    });
 
     let gl = null, u = {};
     try {
