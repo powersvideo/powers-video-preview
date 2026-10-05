@@ -20,6 +20,7 @@
   <meta name="geo.placename" content="New York City">
   <link rel="canonical" href="https://powers.video/">
   <link rel="icon" type="image/png" href="favicon.png"><link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.add('handoff');</script>
   <style>
     /* Full bleed video hero with vignette */
     .hero-video {
@@ -53,6 +54,107 @@
         linear-gradient(to left, #050505 0%, transparent 20%);
       pointer-events: none;
     }
+    /* The handoff. You land on the ocean; the first bit of scrolling dips it to black
+       while the reel fades up out of the dark in its place. The reel holds for a
+       stretch, then Selected Work slides up over it like a sheet. It's all tied to the
+       scroll position, so scrolling back up plays it in reverse. (Without JavaScript
+       the page keeps the plain ocean hero.) */
+    .hero-pin { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: #050505; }
+    .hero-pin .hero-video { position: absolute; inset: 0; height: 100%; will-change: opacity, transform; }
+    .hero-reel {
+      position: absolute; inset: 0; z-index: 2;
+      display: grid; place-items: center;
+      opacity: 0; visibility: hidden; will-change: opacity;
+    }
+    /* the reel: a slim bar (sound button, title) above the 16:9 frame */
+    .hero-reel .reel-box {
+      position: relative;
+      width: min(calc(100vw - 64px), calc((100vh - 220px) * 16 / 9));
+      width: min(calc(100vw - 64px), calc((100svh - 220px) * 16 / 9));
+      will-change: transform;
+    }
+    .hero-reel .reel-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+    .hero-reel .reel-frame {
+      position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: #000;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.06); cursor: pointer;
+    }
+    .hero-reel video { display: block; width: 100%; height: 100%; object-fit: cover; }
+    /* sound: browsers won't start sound by themselves, so the button has to be easy to find */
+    .hero-reel .reel-sound {
+      display: inline-flex; align-items: center; gap: 11px; padding: 10px 16px 10px 13px;
+      font: 11px/1 'Space Mono', monospace; letter-spacing: 0.2em; text-transform: uppercase;
+      color: #fff; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.34);
+      border-radius: 999px; cursor: pointer; transition: background 0.25s, border-color 0.25s;
+    }
+    .hero-reel .reel-sound:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.7); }
+    .hero-reel .reel-sound .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
+    .hero-reel .reel-sound .eq i {
+      display: block; width: 2px; height: 100%; border-radius: 1px; background: #ff5a1f;
+      transform: scaleY(0.3); transform-origin: 50% 100%;
+      animation: reel-eq-idle 2.4s ease-in-out infinite;
+    }
+    .hero-reel .reel-sound .eq i:nth-child(2) { animation-delay: -0.6s; }
+    .hero-reel .reel-sound .eq i:nth-child(3) { animation-delay: -1.2s; }
+    .hero-reel .reel-sound .eq i:nth-child(4) { animation-delay: -1.8s; }
+    .hero-reel.sound-on .reel-sound .eq i { animation: reel-eq 0.9s ease-in-out infinite; }
+    .hero-reel.sound-on .reel-sound .eq i:nth-child(2) { animation-duration: 0.7s; animation-delay: -0.45s; }
+    .hero-reel.sound-on .reel-sound .eq i:nth-child(3) { animation-duration: 1.1s; animation-delay: -0.2s; }
+    .hero-reel.sound-on .reel-sound .eq i:nth-child(4) { animation-duration: 0.8s; animation-delay: -0.6s; }
+    @keyframes reel-eq-idle { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(0.62); } }
+    @keyframes reel-eq { 0%, 100% { transform: scaleY(0.22); } 50% { transform: scaleY(1); } }
+    .hero-reel .reel-sound.nudge { animation: reel-nudge 1.3s cubic-bezier(0.16, 1, 0.3, 1) 2; }
+    @keyframes reel-nudge { 0% { box-shadow: 0 0 0 0 rgba(255,90,31,0.6); } 100% { box-shadow: 0 0 0 16px rgba(255,90,31,0); } }
+    /* desktop: a small label rides with the cursor over the picture */
+    .hero-reel .reel-tip {
+      position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; opacity: 0;
+      padding: 7px 10px; border-radius: 999px; white-space: nowrap;
+      font: 10px/1 'Space Mono', monospace; letter-spacing: 0.18em; text-transform: uppercase;
+      color: #050505; background: #fff; transition: opacity 0.2s;
+    }
+    @media (hover: hover) and (pointer: fine) { .hero-reel .reel-frame:hover .reel-tip { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-reel .reel-sound .eq i, .hero-reel .reel-sound.nudge { animation: none !important; }
+    }
+    .hero-shade { position: absolute; inset: 0; z-index: 3; background: #050505; opacity: 0; pointer-events: none; }
+    .hero-cue {
+      position: absolute; left: 0; right: 0; bottom: 26px; z-index: 3;
+      display: none; flex-direction: column; align-items: center; gap: 10px;
+      font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55); pointer-events: none;
+    }
+    .hero-cue span { padding-left: 0.3em; }
+    .hero-cue i {
+      display: block; width: 1px; height: 34px; background: rgba(255,255,255,0.5);
+      transform-origin: 50% 0; animation: hero-cue 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+    @keyframes hero-cue {
+      0%   { transform: scaleY(0); transform-origin: 50% 0; }
+      45%  { transform: scaleY(1); transform-origin: 50% 0; }
+      55%  { transform: scaleY(1); transform-origin: 50% 100%; }
+      100% { transform: scaleY(0); transform-origin: 50% 100%; }
+    }
+    @media (max-width: 900px) {
+      .hero-reel .reel-box {
+        width: min(100vw, calc((100vh - 150px) * 16 / 9));
+        width: min(100vw, calc((100svh - 150px) * 16 / 9));
+      }
+      .hero-reel .reel-bar { padding: 0 16px; }
+    }
+    @media (max-width: 768px) { .hero-pin { height: 60vh; } }
+    .handoff .hero-stage { height: 300vh; height: 300svh; }
+    .handoff .hero-pin { position: sticky; top: 0; height: 100vh; height: 100svh; }
+    .handoff .hero-cue { display: flex; }
+    .handoff .work-index {
+      position: relative; z-index: 3; background: #050505;
+      margin-top: -100vh; margin-top: -100svh;
+      box-shadow: 0 -1px 0 rgba(255,255,255,0.07), 0 -48px 96px rgba(0,0,0,0.55);
+    }
+    @media (max-aspect-ratio: 1/1) {
+      /* portrait: a 16:9 ocean can't fill a tall screen and keep the title, so it sits
+         as a soft-edged band in the middle of the dark */
+      .handoff .hero-pin .hero-video { top: 50%; bottom: auto; height: 100vw; margin-top: -50vw; }
+    }
+    @media (prefers-reduced-motion: reduce) { .hero-cue i { animation: none; } }
     /* Nav logo hidden at top, fades in as you scroll past the hero video */
     .nav-center {
       opacity: 0;
@@ -210,10 +312,29 @@
   <a href="about.html">About</a>
   <a href="discovery.html">Contact</a>
 </div>
-<section class="hero-video">
-  <video autoplay muted loop playsinline>
-    <source src="hero-ocean-web.mp4" type="video/mp4">
-  </video>
+<section class="hero-stage">
+  <div class="hero-pin">
+    <div class="hero-video">
+      <video autoplay muted loop playsinline>
+        <source src="hero-ocean-web.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-reel">
+      <div class="reel-box">
+        <div class="reel-bar">
+          <button class="reel-sound" type="button" aria-pressed="false"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl">Sound on</span></button>
+        </div>
+        <div class="reel-frame">
+          <video class="reel" muted playsinline loop preload="auto" aria-label="Powers Video showreel">
+            <source src="reel/powers-video-showreel-web.mp4" type="video/mp4">
+          </video>
+          <span class="reel-tip" aria-hidden="true">Click for sound</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-shade"></div>
+    <div class="hero-cue mono" aria-hidden="true"><span>Scroll</span><i></i></div>
+  </div>
 </section>
 
 <section class="work-index">
@@ -562,23 +683,76 @@
 })();
 </script>
 <script>
-  // Fade in nav logo after scrolling past the hero video
-  (function() {
-    const navCenter = document.querySelector('.nav-center');
-    const hero = document.querySelector('.hero-video');
-    if (!navCenter || !hero) return;
+  // The handoff. You land on the ocean; the first fifth of a screen of scrolling dips it
+  // to black while the reel fades up in its place (from 0:00 the first time, muted). The
+  // reel holds for a stretch, then Selected Work slides up over it like a sheet and the
+  // reel eases back into the dark. Everything follows the scroll position, so scrolling
+  // up plays it in reverse. Only what you can see plays.
+  (function () {
+    const stage = document.querySelector('.hero-stage'); if (!stage) return;
+    const pin = stage.querySelector('.hero-pin'), sheet = document.querySelector('.work-index');
+    const ocean = stage.querySelector('.hero-video'), sea = ocean.querySelector('video');
+    const wrap = stage.querySelector('.hero-reel'), box = wrap.querySelector('.reel-box'), frame = wrap.querySelector('.reel-frame');
+    const v = wrap.querySelector('video'), btn = wrap.querySelector('.reel-sound'), lbl = btn.querySelector('.lbl'), tip = wrap.querySelector('.reel-tip');
+    const shade = stage.querySelector('.hero-shade'), cue = stage.querySelector('.hero-cue');
+    const logo = document.querySelector('.nav-center');
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.documentElement.classList.add('handoff');
 
-    function checkScroll() {
-      const heroBottom = hero.offsetHeight * 0.7;
-      if (window.scrollY > heroBottom) {
-        navCenter.classList.add('visible');
-      } else {
-        navCenter.classList.remove('visible');
+    const clamp = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
+    const ramp = (x, a, b) => clamp((x - a) / (b - a));
+    const ease = (t) => t * t * (3 - 2 * t);
+    let started = false, queued = false, nudged = false;
+
+    function update() {
+      queued = false;
+      const h = pin.offsetHeight || window.innerHeight;
+      const s = -stage.getBoundingClientRect().top / h;          // screens scrolled into the stage
+      const top = sheet ? sheet.getBoundingClientRect().top : Infinity;
+      const out = ease(ramp(s, 0, 0.2));                          // ocean → black
+      const up = ease(ramp(s, 0.08, 0.4));                        // black → reel
+      const cover = ease(clamp(1 - top / window.innerHeight));    // the sheet slides over
+      ocean.style.opacity = (1 - out).toFixed(3);
+      wrap.style.opacity = up.toFixed(3);
+      wrap.style.visibility = up > 0.001 ? 'visible' : 'hidden';
+      shade.style.opacity = (0.8 * cover).toFixed(3);
+      if (cue) cue.style.opacity = (1 - ramp(s, 0, 0.06)).toFixed(3);
+      if (!still) {
+        ocean.style.transform = 'scale(' + (1 + 0.06 * out).toFixed(4) + ')';
+        box.style.transform = 'scale(' + ((0.96 + 0.04 * up) * (1 - 0.06 * cover)).toFixed(4) + ')';
       }
+      if (logo) logo.classList.toggle('visible', out > 0.98);
+      if (!nudged && up > 0.98) { nudged = true; btn.classList.add('nudge'); setTimeout(() => btn.classList.remove('nudge'), 2800); }
+      if (out < 1) { if (sea.paused) sea.play().catch(() => {}); } else if (!sea.paused) sea.pause();
+      if (up > 0.001 && top > 0) {
+        if (!started) { started = true; try { v.currentTime = 0; } catch (e) {} }
+        if (v.paused) v.play().catch(() => {});
+      } else if (!v.paused) v.pause();
     }
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+    window.addEventListener('scroll', queue, { passive: true });
+    window.addEventListener('resize', queue);
+    window.addEventListener('pageshow', queue);
+    update();
 
-    window.addEventListener('scroll', checkScroll, { passive: true });
-    checkScroll();
+    // sound: the reel file carries its soundtrack, so turning it on is instant. Browsers
+    // won't start sound by themselves (it takes a click or a tap), so the button sits
+    // up top, breathes, glows twice when the reel first comes up, and the whole picture
+    // is clickable too.
+    function setSound(on) {
+      v.muted = !on;
+      if (on && v.paused) v.play().catch(() => {});
+      wrap.classList.toggle('sound-on', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      lbl.textContent = on ? 'Sound off' : 'Sound on';
+      tip.textContent = on ? 'Click to mute' : 'Click for sound';
+    }
+    btn.addEventListener('click', () => setSound(v.muted));
+    frame.addEventListener('click', () => setSound(v.muted));
+    frame.addEventListener('mousemove', (e) => {
+      const r = frame.getBoundingClientRect();
+      tip.style.transform = 'translate(' + (e.clientX - r.left + 14) + 'px,' + (e.clientY - r.top + 16) + 'px)';
+    });
   })();
 </script>
 </body>
