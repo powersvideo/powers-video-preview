@@ -79,14 +79,14 @@
       box-shadow: 0 0 0 1px rgba(255,255,255,0.06); cursor: pointer;
     }
     .hero-reel video { display: block; width: 100%; height: 100%; object-fit: cover; }
-    /* sound: browsers won't start sound by themselves, so the button has to be easy to find */
+    /* sound: Sound on / Mute sits right above the picture, top left */
     .hero-reel .reel-sound {
       display: inline-flex; align-items: center; gap: 11px; padding: 10px 16px 10px 13px;
       font: 11px/1 'Space Mono', monospace; letter-spacing: 0.2em; text-transform: uppercase;
       color: #fff; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.34);
-      border-radius: 999px; cursor: pointer; transition: background 0.25s, border-color 0.25s;
+      border-radius: 999px; cursor: pointer; transition: color 0.25s, background 0.25s, border-color 0.25s;
     }
-    .hero-reel .reel-sound:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.7); }
+    @media (hover: hover) { .hero-reel .reel-sound:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.7); } }
     .hero-reel .reel-sound .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
     .hero-reel .reel-sound .eq i {
       display: block; width: 2px; height: 100%; border-radius: 1px; background: #ff5a1f;
@@ -104,6 +104,12 @@
     @keyframes reel-eq { 0%, 100% { transform: scaleY(0.22); } 50% { transform: scaleY(1); } }
     .hero-reel .reel-sound.nudge { animation: reel-nudge 1.3s cubic-bezier(0.16, 1, 0.3, 1) 2; }
     @keyframes reel-nudge { 0% { box-shadow: 0 0 0 0 rgba(255,90,31,0.6); } 100% { box-shadow: 0 0 0 16px rgba(255,90,31,0); } }
+    /* while the sound plays, the button turns solid white and reads Mute: the way to turn
+       it off is the brightest thing on the screen */
+    .hero-reel.sound-on .reel-sound { color: #050505; background: #fff; border-color: #fff; }
+    @media (hover: hover) { .hero-reel.sound-on .reel-sound:hover { background: rgba(255,255,255,0.82); border-color: rgba(255,255,255,0.82); } }
+    .hero-reel.sound-on .reel-sound.nudge { animation-name: reel-nudge-on; }
+    @keyframes reel-nudge-on { 0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.55); } 100% { box-shadow: 0 0 0 16px rgba(255,255,255,0); } }
     /* desktop: a small label rides with the cursor over the picture */
     .hero-reel .reel-tip {
       position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; opacity: 0;
@@ -322,7 +328,7 @@
     <div class="hero-reel">
       <div class="reel-box">
         <div class="reel-bar">
-          <button class="reel-sound" type="button" aria-pressed="false"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl">Sound on</span></button>
+          <button class="reel-sound" type="button" title="Sound on (M)"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl">Sound on</span></button>
         </div>
         <div class="reel-frame">
           <video class="reel" muted playsinline loop preload="auto" aria-label="Powers Video showreel">
@@ -684,10 +690,18 @@
 </script>
 <script>
   // The handoff. You land on the ocean; the first fifth of a screen of scrolling dips it
-  // to black while the reel fades up in its place (from 0:00 the first time, muted). The
-  // reel holds for a stretch, then Selected Work slides up over it like a sheet and the
-  // reel eases back into the dark. Everything follows the scroll position, so scrolling
-  // up plays it in reverse. Only what you can see plays.
+  // to black while the reel fades up in its place (from 0:00 the first time). The reel
+  // holds for a stretch, then Selected Work slides up over it like a sheet and the reel
+  // eases back into the dark. Everything follows the scroll position, so scrolling up
+  // plays it in reverse. Only what you can see plays.
+  //
+  // Sound: when the reel comes up it plays with sound at half volume, fading in and out
+  // with the picture as you scroll, and it stops when you scroll away. Browsers only allow
+  // sound once a visitor has clicked, tapped or pressed a key on the page, so a visitor who
+  // has only scrolled sees the reel silently with the Sound on button pulsing; their first
+  // click on the page (or Space / arrow key) while the reel is up turns it on. While the
+  // sound plays the button turns solid white and reads Mute. M toggles it too, and a mute
+  // is remembered for next time.
   (function () {
     const stage = document.querySelector('.hero-stage'); if (!stage) return;
     const pin = stage.querySelector('.hero-pin'), sheet = document.querySelector('.work-index');
@@ -703,6 +717,16 @@
     const ramp = (x, a, b) => clamp((x - a) / (b - a));
     const ease = (t) => t * t * (3 - 2 * t);
     let started = false, queued = false, nudged = false;
+    let up = 0, cover = 0, showing = false;
+
+    // sound state
+    const VOLUME = 0.5;                        // half volume: there, not startling
+    const KEY = 'pv-reel-sound';
+    let muted = false;                         // the visitor pressed Mute (remembered)
+    try { muted = localStorage.getItem(KEY) === 'off'; } catch (e) {}
+    let on = false;                            // the reel is unmuted
+    let refused = false;                       // the browser said no: wait for a click or key
+    const audible = () => showing && cover < 0.5;
 
     function update() {
       queued = false;
@@ -710,8 +734,8 @@
       const s = -stage.getBoundingClientRect().top / h;          // screens scrolled into the stage
       const top = sheet ? sheet.getBoundingClientRect().top : Infinity;
       const out = ease(ramp(s, 0, 0.2));                          // ocean → black
-      const up = ease(ramp(s, 0.08, 0.4));                        // black → reel
-      const cover = ease(clamp(1 - top / window.innerHeight));    // the sheet slides over
+      up = ease(ramp(s, 0.08, 0.4));                              // black → reel
+      cover = ease(clamp(1 - top / window.innerHeight));          // the sheet slides over
       ocean.style.opacity = (1 - out).toFixed(3);
       wrap.style.opacity = up.toFixed(3);
       wrap.style.visibility = up > 0.001 ? 'visible' : 'hidden';
@@ -722,37 +746,91 @@
         box.style.transform = 'scale(' + ((0.96 + 0.04 * up) * (1 - 0.06 * cover)).toFixed(4) + ')';
       }
       if (logo) logo.classList.toggle('visible', out > 0.98);
-      if (!nudged && up > 0.98) { nudged = true; btn.classList.add('nudge'); setTimeout(() => btn.classList.remove('nudge'), 2800); }
       if (out < 1) { if (sea.paused) sea.play().catch(() => {}); } else if (!sea.paused) sea.pause();
-      if (up > 0.001 && top > 0) {
+      showing = up > 0.001 && top > 0 && !document.hidden;
+      if (showing) {
         if (!started) { started = true; try { v.currentTime = 0; } catch (e) {} }
-        if (v.paused) v.play().catch(() => {});
+        // sound comes up with the picture (tried while it's still almost invisible, so a
+        // browser that refuses never shows a stutter)
+        if (!on && !muted && !refused && audible()) soundOn();
+        else if (v.paused) play();
       } else if (!v.paused) v.pause();
+      if (!nudged && up > 0.98) { nudged = true; btn.classList.add('nudge'); setTimeout(() => btn.classList.remove('nudge'), 2800); }
+      level();
     }
-    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
-    window.addEventListener('scroll', queue, { passive: true });
-    window.addEventListener('resize', queue);
-    window.addEventListener('pageshow', queue);
-    update();
 
-    // sound: the reel file carries its soundtrack, so turning it on is instant. Browsers
-    // won't start sound by themselves (it takes a click or a tap), so the button sits
-    // up top, breathes, glows twice when the reel first comes up, and the whole picture
-    // is clickable too.
-    function setSound(on) {
-      v.muted = !on;
-      if (on && v.paused) v.play().catch(() => {});
+    function play() { const p = v.play(); if (p && p.catch) p.catch(() => { if (on) refuse(); }); }
+    function ui() {
       wrap.classList.toggle('sound-on', on);
-      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-      lbl.textContent = on ? 'Sound off' : 'Sound on';
+      lbl.textContent = on ? 'Mute' : 'Sound on';
+      btn.title = on ? 'Mute (M)' : 'Sound on (M)';
       tip.textContent = on ? 'Click to mute' : 'Click for sound';
     }
-    btn.addEventListener('click', () => setSound(v.muted));
-    frame.addEventListener('click', () => setSound(v.muted));
+    // the browser won't play sound yet: carry on silently until the next click or key
+    function refuse() {
+      on = false; refused = true; v.muted = true; ui();
+      if (showing && v.paused) v.play().catch(() => {});
+    }
+    function soundOn() {
+      on = true; refused = false; gain = 0; vol(0); v.muted = false; ui();
+      if (showing) {
+        const p = v.play();
+        if (p && p.then) p.then(() => { if (on && (v.paused || v.muted)) refuse(); }, () => { if (on) refuse(); });
+      }
+      level();
+    }
+    function toggle() {
+      if (on) {
+        on = false; v.muted = true; muted = true; ui();
+        try { localStorage.setItem(KEY, 'off'); } catch (e) {}
+      } else {
+        muted = false; try { localStorage.removeItem(KEY); } catch (e) {}
+        soundOn();
+      }
+    }
+
+    // the volume follows the picture: up as the reel fades in, down as the work slides over
+    let gain = 0, raf = 0, last = 0;
+    const vol = (x) => { try { v.volume = clamp(x); } catch (e) {} };   // (iPhones ignore this)
+    function level() { if (!raf) { last = 0; raf = requestAnimationFrame(step); } }
+    function step(t) {
+      raf = 0;
+      const target = on && showing ? VOLUME * up * (1 - cover) : 0;
+      const dt = last ? Math.min(0.1, (t - last) / 1000) : 1 / 60; last = t;
+      gain += (target - gain) * (1 - Math.exp(-dt / 0.25));
+      if (Math.abs(target - gain) < 0.004) gain = target;
+      vol(gain);
+      if (gain !== target) raf = requestAnimationFrame(step);
+    }
+
+    // a visitor's first click or key while the reel is up turns the sound on (links, buttons,
+    // the menus and the work list keep their own meaning); M toggles it any time it's up
+    function gesture(e) {
+      const t = e.target && e.target.closest ? e.target : null;
+      if (e.type === 'keydown') {
+        if (e.metaKey || e.ctrlKey || e.altKey || (t && t.closest('input, textarea, select, [contenteditable]'))) return;
+        if (e.key === 'm' || e.key === 'M') { if (showing) toggle(); return; }
+        if (!/^( |Arrow(Up|Down)|Page(Up|Down))$/.test(e.key) || (t && t.closest('a, button'))) return;
+      } else if (t && t.closest('a, button, nav, .mobile-menu, .reel-frame, .work-index')) return;
+      refused = false;
+      if (!on && !muted && audible()) soundOn();
+    }
+    window.addEventListener('click', gesture, true);
+    window.addEventListener('keydown', gesture, true);
+    btn.addEventListener('click', toggle);
+    frame.addEventListener('click', toggle);
     frame.addEventListener('mousemove', (e) => {
       const r = frame.getBoundingClientRect();
       tip.style.transform = 'translate(' + (e.clientX - r.left + 14) + 'px,' + (e.clientY - r.top + 16) + 'px)';
     });
+
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+    window.addEventListener('scroll', queue, { passive: true });
+    window.addEventListener('resize', queue);
+    window.addEventListener('pageshow', queue);
+    document.addEventListener('visibilitychange', () => { if (document.hidden && !v.paused) v.pause(); queue(); });
+    ui();
+    update();
   })();
 </script>
 </body>
