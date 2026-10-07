@@ -98,22 +98,17 @@ nav a:hover { opacity: 1; }
   min-width: 140px;
 }
 .dropdown-menu-inner {
-  /* dark → slightly less dark, translucent with a blur behind */
-  background: linear-gradient(180deg, rgba(6,6,6,0.94) 0%, rgba(34,34,34,0.84) 100%);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: #050505;
+  border: 1px solid rgba(255,255,255,0.08);
   padding: 10px 0;
 }
-/* The nav blends (difference) so it reads over any page — but that blend also
-   swallowed the dropdown's dark panel. Drop the blend while a menu is open. */
-nav:has(.dropdown:hover) { mix-blend-mode: normal; }
 .dropdown:hover .dropdown-menu { display: block; }
 .dropdown-menu a {
   display: block;
   padding: 6px 18px;
   font-size: 12px;
-  opacity: 0.72;
+  opacity: 0.5;
+  mix-blend-mode: normal;
 }
 .dropdown-menu a:hover { opacity: 1; }
 
