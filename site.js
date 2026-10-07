@@ -14,6 +14,8 @@ function toggleRow(row) {
   const hint = row.querySelector('.work-hint-text');
   if (arrow) arrow.textContent = row.classList.contains('expanded') ? '\u2212' : '+';
   if (hint) hint.textContent = row.classList.contains('expanded') ? '' : 'Watch';
+  // a self-hosted video keeps playing when its row folds away — stop it
+  if (!row.classList.contains('expanded')) row.querySelectorAll('.work-video-inner video').forEach(v => v.pause());
 }
 
 document.querySelectorAll('.work-row').forEach(row => {

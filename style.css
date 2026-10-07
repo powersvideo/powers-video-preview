@@ -327,7 +327,8 @@ nav a:hover { opacity: 1; }
   background: #0a0a0a;
 }
 
-.work-video-inner iframe {
+.work-video-inner iframe,
+.work-video-inner video {
   position: absolute;
   inset: 0;
   width: 100%;
