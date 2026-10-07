@@ -236,11 +236,34 @@
       margin-top: 18px; max-width: 560px;
       font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.45);
     }
+    /* Del Monte: one spot with sound on the left, the other 25 crammed in on
+       the right, the whole block 16:9 like every other video on the page */
+    .dm-stage { display: flex; gap: 6px; width: 100%; aspect-ratio: 16 / 9; }
+    .dm-hero { position: relative; flex: none; height: 100%; aspect-ratio: 9 / 16; background: #0a0a0a; }
+    .dm-hero video { display: block; width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
+    .dm-grid { flex: 1; min-width: 0; height: 100%; overflow: hidden; }
+    .dm-grid .wall { columns: 7; column-gap: 6px; }
+    /* packed by JS into flex columns that each fill the full height */
+    .dm-grid .wall.packed { columns: auto; display: flex; gap: 6px; height: 100%; }
+    .dm-grid .wall.packed .dm-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+    .dm-grid .wall.packed .tile { margin: 0; width: 100%; min-height: 0; aspect-ratio: auto; }
+    .dm-snd {
+      position: absolute; left: 10px; bottom: 10px; z-index: 2;
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: #fff; background: rgba(0,0,0,0.45); border: 0; padding: 5px 9px;
+      -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); cursor: pointer;
+    }
     @media (max-width: 768px) {
       .wall-inner { margin-left: 0; width: 100%; }
       .wall { columns: 3 96px; column-gap: 4px; }
       .wall .tile { margin-bottom: 4px; }
       .wall-meta { gap: 18px; }
+      .dm-stage { gap: 3px; }
+      .dm-grid .wall { columns: 7; column-gap: 3px; }
+      .dm-grid .wall .tile { margin-bottom: 3px; }
+      .dm-grid .wall.packed, .dm-grid .wall.packed .dm-col { gap: 3px; }
+      .dm-grid .wall.packed .tile { margin: 0; }
+      .dm-snd { left: 5px; bottom: 5px; font-size: 8px; letter-spacing: 0.12em; padding: 3px 5px; }
     }
 
   </style>
@@ -685,33 +708,40 @@
     <div class="work-video">
       <div class="wall-inner">
         <div class="wall-meta mono"><span>26 &times; :06</span><span>16:9 + 9:16</span><span>One brief</span></div>
-        <div class="wall" id="wall">
-          <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w01.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w01.mp4" aria-label="Spot 01"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w02.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w02.mp4" aria-label="Spot 02"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w03.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w03.mp4" aria-label="Spot 03"></video>
-          <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w04.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w04.mp4" aria-label="Spot 04"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w05.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w05.mp4" aria-label="Spot 05"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w06.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w06.mp4" aria-label="Spot 06"></video>
-          <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w07.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w07.mp4" aria-label="Spot 07"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w08.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w08.mp4" aria-label="Spot 08"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w09.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w09.mp4" aria-label="Spot 09"></video>
-          <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w10.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w10.mp4" aria-label="Spot 10"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w11.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w11.mp4" aria-label="Spot 11"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w12.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w12.mp4" aria-label="Spot 12"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w13.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w13.mp4" aria-label="Spot 13"></video>
-          <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w14.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w14.mp4" aria-label="Spot 14"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w15.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w15.mp4" aria-label="Spot 15"></video>
-          <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w16.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w16.mp4" aria-label="Spot 16"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w17.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w17.mp4" aria-label="Spot 17"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w18.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w18.mp4" aria-label="Spot 18"></video>
-          <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w19.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w19.mp4" data-offset="3.75" aria-label="Spot 19"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w20.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w20.mp4" data-offset="3.75" aria-label="Spot 20"></video>
-          <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w21.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w21.mp4" data-offset="3.75" aria-label="Spot 21"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w22.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w22.mp4" data-offset="3.75" aria-label="Spot 22"></video>
-          <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w23.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w23.mp4" data-offset="3.75" aria-label="Spot 23"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w24.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w24.mp4" data-offset="3.75" aria-label="Spot 24"></video>
-          <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w25.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w25.mp4" data-offset="3.75" aria-label="Spot 25"></video>
-          <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w26.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w26.mp4" data-offset="3.75" aria-label="Spot 26"></video>
+        <div class="dm-stage">
+          <div class="dm-hero">
+            <video id="wall-hero" playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w00.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w00.mp4" aria-label="Spot 02, with sound"></video>
+            <button class="dm-snd mono" type="button">Sound on</button>
+          </div>
+          <div class="dm-grid">
+          <div class="wall" id="wall">
+            <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w01.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w01.mp4" aria-label="Spot 01"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w03.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w03.mp4" aria-label="Spot 03"></video>
+            <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w04.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w04.mp4" aria-label="Spot 04"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w05.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w05.mp4" aria-label="Spot 05"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w06.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w06.mp4" aria-label="Spot 06"></video>
+            <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w07.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w07.mp4" aria-label="Spot 07"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w08.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w08.mp4" aria-label="Spot 08"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w09.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w09.mp4" aria-label="Spot 09"></video>
+            <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w10.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w10.mp4" aria-label="Spot 10"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w11.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w11.mp4" aria-label="Spot 11"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w12.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w12.mp4" aria-label="Spot 12"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w13.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w13.mp4" aria-label="Spot 13"></video>
+            <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w14.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w14.mp4" aria-label="Spot 14"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w15.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w15.mp4" aria-label="Spot 15"></video>
+            <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w16.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w16.mp4" aria-label="Spot 16"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w17.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w17.mp4" aria-label="Spot 17"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w18.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w18.mp4" aria-label="Spot 18"></video>
+            <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w19.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w19.mp4" data-offset="3.75" aria-label="Spot 19"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w20.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w20.mp4" data-offset="3.75" aria-label="Spot 20"></video>
+            <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w21.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w21.mp4" data-offset="3.75" aria-label="Spot 21"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w22.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w22.mp4" data-offset="3.75" aria-label="Spot 22"></video>
+            <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w23.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w23.mp4" data-offset="3.75" aria-label="Spot 23"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w24.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w24.mp4" data-offset="3.75" aria-label="Spot 24"></video>
+            <video class="tile h" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w25.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w25.mp4" data-offset="3.75" aria-label="Spot 25"></video>
+            <video class="tile v" muted playsinline loop preload="none" data-poster="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w26.jpg" data-src="https://pub-a028716be39c4efab7b8cfaea87a5997.r2.dev/w26.mp4" data-offset="3.75" aria-label="Spot 26"></video>
+          </div>
+          </div>
         </div>
         <p class="wall-caption">Every tile is a delivered social spot. One visual grammar is carried across two formats and a whole line of products.</p>
       </div>
@@ -933,6 +963,29 @@
 // without any single tile leading. Closing the row pauses them all.
 (function () {
   const wall = document.getElementById('wall'); if (!wall) return;
+
+  // Pack the crammed grid: deal the spots into COLS columns so the column
+  // heights come out as even as possible, then let each tile flex (cropped
+  // by object-fit, never stretched) so every column ends at the bottom edge.
+  if (wall.closest('.dm-grid')) {
+    const COLS = 6, items = Array.from(wall.querySelectorAll('video.tile'));
+    const hOf = v => v.classList.contains('v') ? 16 / 9 : 9 / 16;   // height per unit width
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    let best = null, bestSpread = Infinity;
+    for (let trial = 0; trial < 3000; trial++) {
+      const order = trial === 0 ? items.slice() : items.slice().sort(() => rnd() - 0.5);
+      const cols = Array.from({ length: COLS }, () => ({ h: 0, list: [] }));
+      order.forEach(v => { const c = cols.reduce((a, b) => (b.h < a.h ? b : a)); c.list.push(v); c.h += hOf(v); });
+      const hs = cols.map(c => c.h), spread = Math.max(...hs) - Math.min(...hs);
+      if (spread < bestSpread) { bestSpread = spread; best = cols; }
+    }
+    wall.classList.add('packed');
+    best.forEach(c => {
+      const col = document.createElement('div'); col.className = 'dm-col';
+      c.list.forEach(v => { v.style.flex = hOf(v) + ' 1 0'; col.appendChild(v); });
+      wall.appendChild(col);
+    });
+  }
   const row = wall.closest('.work-row');
   const tiles = Array.from(wall.querySelectorAll('video'));
   const LOOP = 6, off = v => parseFloat(v.dataset.offset || 0);
@@ -941,6 +994,31 @@
   const want  = v => (clock() + off(v)) % LOOP;
   const inView = new Set();
   const isOpen = () => row.classList.contains('expanded');
+
+  // the one spot shown big, with sound — same clock as the grid
+  const hero = document.getElementById('wall-hero');
+  const snd = document.querySelector('.dm-snd');
+  let wantSound = true, heroSeen = false;
+  const paint = () => { if (snd) snd.textContent = hero.muted ? 'Tap for sound' : 'Sound on'; };
+  function heroPlay () {
+    if (!hero) return;
+    if (!hero.src) hero.src = hero.dataset.src;
+    try { hero.currentTime = clock(); } catch (e) {}
+    hero.volume = 0.5; hero.muted = !wantSound; paint();
+    hero.play().catch(() => { hero.muted = true; paint(); hero.play().catch(() => {}); });
+  }
+  function toggleSound () {
+    hero.muted = !hero.muted; wantSound = !hero.muted; paint();
+    if (hero.paused) hero.play().catch(() => {});
+  }
+  if (hero) {
+    hero.addEventListener('click', toggleSound);
+    if (snd) snd.addEventListener('click', e => { e.stopPropagation(); toggleSound(); });
+    new IntersectionObserver(es => es.forEach(e => {
+      heroSeen = e.isIntersecting;
+      if (heroSeen && isOpen() && hero.src) heroPlay(); else hero.pause();
+    }), { rootMargin: '0px' }).observe(hero);
+  }
 
   // clicks on the wall shouldn't collapse the row
   wall.closest('.wall-inner').addEventListener('click', e => e.stopPropagation());
@@ -953,21 +1031,22 @@
     const ready = v => v.readyState >= 3 ? Promise.resolve()
       : new Promise(r => v.addEventListener('canplay', r, { once: true }));
     Promise.race([Promise.all(tiles.map(ready)), new Promise(r => setTimeout(r, 5000))])
-      .then(() => { t0 = performance.now(); if (isOpen()) inView.forEach(seekPlay); });
+      .then(() => { t0 = performance.now(); if (isOpen()) { inView.forEach(seekPlay); if (hero && heroSeen) { try { hero.currentTime = clock(); } catch (e) {} } } });
   }
 
   // posters as the row nears the screen, so the hover peek isn't empty
   new IntersectionObserver((es, o) => es.forEach(e => {
     if (!e.isIntersecting) return;
     tiles.forEach(v => { if (v.dataset.poster) v.poster = v.dataset.poster; });
+    if (hero) hero.poster = hero.dataset.poster;
     o.disconnect();
   }), { rootMargin: '800px 0px' }).observe(row);
 
   // opening the row loads the clips; closing it pauses them
   // (site.js has already toggled the row by the time this runs)
   row.addEventListener('click', () => {
-    if (isOpen()) { arm(); if (t0 !== null) inView.forEach(seekPlay); }
-    else tiles.forEach(v => v.pause());
+    if (isOpen()) { heroPlay(); arm(); if (t0 !== null) inView.forEach(seekPlay); }   // heroPlay inside the click: sound allowed
+    else { tiles.forEach(v => v.pause()); if (hero) hero.pause(); }
   });
 
   // play only the tiles actually on screen
@@ -986,6 +1065,11 @@
       let d = Math.abs(v.currentTime - want(v)); if (d > LOOP / 2) d = LOOP - d;
       if (d > 0.12) v.currentTime = want(v);
     });
+    // the big spot too, but only when it's clearly off — a seek jumps its sound
+    if (hero && heroSeen && !hero.paused) {
+      let d = Math.abs(hero.currentTime - clock()); if (d > LOOP / 2) d = LOOP - d;
+      if (d > 0.3) hero.currentTime = clock();
+    }
   }, 3000);
 
   document.addEventListener('visibilitychange', () => { if (!document.hidden && t0 !== null && isOpen()) inView.forEach(seekPlay); });
