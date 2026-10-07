@@ -61,6 +61,19 @@ nav a {
 nav a:hover { opacity: 1; }
 
 /* Dropdown overlays */
+/* Logo halo — see site.js. An ellipse sized to the wordmark plus 44px each
+   side: solid black past the letters, then a long ease out to clear. */
+.logo-halo {
+  position: fixed;
+  z-index: 998;              /* just under the nav (999), over the page */
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  background: radial-gradient(ellipse closest-side at center,
+    #050505 0%, #050505 64%,
+    rgba(5,5,5,0.86) 72%, rgba(5,5,5,0.6) 81%,
+    rgba(5,5,5,0.3) 90%, rgba(5,5,5,0) 100%);
+}
+
 .dropdown { position: relative; }
 .dropdown > span {
   opacity: 0.5;
@@ -79,17 +92,22 @@ nav a:hover { opacity: 1; }
   min-width: 140px;
 }
 .dropdown-menu-inner {
-  background: #050505;
-  border: 1px solid rgba(255,255,255,0.08);
+  /* dark → slightly less dark, translucent with a blur behind */
+  background: linear-gradient(180deg, rgba(6,6,6,0.94) 0%, rgba(34,34,34,0.84) 100%);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.1);
   padding: 10px 0;
 }
+/* The nav blends (difference) so it reads over any page — but that blend also
+   swallowed the dropdown's dark panel. Drop the blend while a menu is open. */
+nav:has(.dropdown:hover) { mix-blend-mode: normal; }
 .dropdown:hover .dropdown-menu { display: block; }
 .dropdown-menu a {
   display: block;
   padding: 6px 18px;
   font-size: 12px;
-  opacity: 0.5;
-  mix-blend-mode: normal;
+  opacity: 0.72;
 }
 .dropdown-menu a:hover { opacity: 1; }
 
