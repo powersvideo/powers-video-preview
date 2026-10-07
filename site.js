@@ -109,15 +109,14 @@ if (toggle && mobileMenu) {
   halo.setAttribute('aria-hidden', 'true');
   document.body.appendChild(halo);
   const fadesLogo = !!document.querySelector('.hero-video');
-  const SOLID = 10;  // px of pure black outside the letters
-  const FADE = 34;   // px over which it dissolves to clear
+  const PAD_X = 64;  // px the fade reaches past each end of the wordmark
+  const PAD_Y = 26;  // px above and below — kept short to save screen space
   function place () {
     const r = logo.getBoundingClientRect();
-    const pad = SOLID + FADE;
-    halo.style.left = (r.left - pad) + 'px';
-    halo.style.top = (r.top - pad) + 'px';
-    halo.style.width = (r.width + pad * 2) + 'px';
-    halo.style.height = (r.height + pad * 2) + 'px';
+    halo.style.left = (r.left - PAD_X) + 'px';
+    halo.style.top = (r.top - PAD_Y) + 'px';
+    halo.style.width = (r.width + PAD_X * 2) + 'px';
+    halo.style.height = (r.height + PAD_Y * 2) + 'px';
     // homepage hides the logo over the hero and adds .visible to fade it in;
     // follow that class (both fade over 0.4s) rather than sampling mid-fade
     halo.style.opacity = (!fadesLogo || holder.classList.contains('visible')) ? '1' : '0';

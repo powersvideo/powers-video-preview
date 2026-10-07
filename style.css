@@ -61,17 +61,23 @@ nav a {
 nav a:hover { opacity: 1; }
 
 /* Dropdown overlays */
-/* Logo halo — see site.js. An ellipse sized to the wordmark plus 44px each
-   side: solid black past the letters, then a long ease out to clear. */
+/* Logo halo — see site.js. A soft rounded rectangle: two fades (across and
+   up/down) multiplied, darkest at the centre of the wordmark and easing out
+   from there, so the outer letters sit partly in the fade. */
 .logo-halo {
   position: fixed;
   z-index: 998;              /* just under the nav (999), over the page */
   pointer-events: none;
   transition: opacity 0.4s ease;
-  background: radial-gradient(ellipse closest-side at center,
-    #050505 0%, #050505 64%,
-    rgba(5,5,5,0.86) 72%, rgba(5,5,5,0.6) 81%,
-    rgba(5,5,5,0.3) 90%, rgba(5,5,5,0) 100%);
+  background: #050505;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, rgba(0,0,0,.18) 10%, rgba(0,0,0,.45) 20%, rgba(0,0,0,.75) 32%, rgba(0,0,0,.94) 44%, #000 50%, rgba(0,0,0,.94) 56%, rgba(0,0,0,.75) 68%, rgba(0,0,0,.45) 80%, rgba(0,0,0,.18) 90%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.35) 14%, rgba(0,0,0,.8) 30%, #000 42%, #000 58%, rgba(0,0,0,.8) 70%, rgba(0,0,0,.35) 86%, transparent 100%);
+  -webkit-mask-composite: source-in;
+          mask-image:
+    linear-gradient(to right, transparent 0%, rgba(0,0,0,.18) 10%, rgba(0,0,0,.45) 20%, rgba(0,0,0,.75) 32%, rgba(0,0,0,.94) 44%, #000 50%, rgba(0,0,0,.94) 56%, rgba(0,0,0,.75) 68%, rgba(0,0,0,.45) 80%, rgba(0,0,0,.18) 90%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.35) 14%, rgba(0,0,0,.8) 30%, #000 42%, #000 58%, rgba(0,0,0,.8) 70%, rgba(0,0,0,.35) 86%, transparent 100%);
+          mask-composite: intersect;
 }
 
 .dropdown { position: relative; }
