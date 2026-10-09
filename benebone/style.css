@@ -14,3 +14,6 @@
 @media(max-width:800px){.concept{min-height:auto}.scroll-cue{bottom:14px;padding:10px 14px}.motion-ready .scroll-scene{transform:translateY(calc((1 - var(--scene-visibility,1))*10px))}}
 @media(prefers-reduced-motion:reduce){.motion-ready .scroll-scene{opacity:1;transform:none;will-change:auto}.chevron{animation:none}}
 @media print{.scroll-cue{display:none!important}.motion-ready .scroll-scene{opacity:1!important;transform:none!important}}
+
+/* Everyday advertising: one motion example beneath the full photo grid. */
+.everyday-media{width:100%;max-width:800px}.everyday-media .photo-grid{max-width:none}.sample-film{margin:12px 0 0}.sample-film figcaption{font:12px/1.5 ui-monospace,monospace;color:#626262;margin-top:10px}
