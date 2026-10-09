@@ -17,3 +17,6 @@
 
 /* Everyday advertising: one motion example beneath the full photo grid. */
 .everyday-media{width:100%;max-width:800px}.everyday-media .photo-grid{max-width:none}.sample-film{margin:12px 0 0}.sample-film figcaption{font:12px/1.5 ui-monospace,monospace;color:#626262;margin-top:10px}
+
+/* Review status and watermarks are part of the review copies themselves. */
+.concept-status{border-left:3px solid var(--accent);background:#f5f5f5;padding:20px 24px;margin:0 0 30px;max-width:1000px}.concept-status p{font-size:16px;margin:12px 0 0;max-width:850px}.concept-status .note{margin-top:10px!important}.review-label{font:11px/1.5 ui-monospace,monospace;color:#626262;margin:9px 0 14px;text-transform:uppercase;letter-spacing:.5px}.media-stack img{user-select:none;-webkit-user-drag:none}

@@ -4,7 +4,7 @@ document.querySelectorAll('video').forEach(video => video.addEventListener('play
  document.querySelectorAll('video').forEach(other => { if (other !== video) other.pause(); });
 }));
 const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
-const scenes=[...document.querySelectorAll('.concept,.partnership,.documents,.bio')];
+const scenes=[...document.querySelectorAll('.concept,.partnership,.bio')];
 const cue=document.querySelector('.scroll-cue');
 const clamp=n=>Math.max(0,Math.min(1,n));
 let scheduled=false;
@@ -29,3 +29,6 @@ cue.addEventListener('click',()=>{
  if(next)next.scrollIntoView({behavior:reduceMotion.matches?'instant':'smooth',block:'start'});
 });
 updateScenes();
+
+// Discourage casual saving while retaining standard playback and fullscreen controls.
+document.querySelectorAll("video,img").forEach(media=>media.addEventListener("contextmenu",event=>event.preventDefault()));
