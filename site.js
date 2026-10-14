@@ -13,7 +13,11 @@ function toggleRow(row) {
   const arrow = row.querySelector('.work-arrow');
   const hint = row.querySelector('.work-hint-text');
   if (arrow) arrow.textContent = row.classList.contains('expanded') ? '\u2212' : '+';
-  if (hint) hint.textContent = row.classList.contains('expanded') ? '' : 'Watch';
+  if (hint) {
+    // remember the row's own label ("Watch", "Password") so it comes back on collapse
+    if (!('label' in hint.dataset)) hint.dataset.label = hint.textContent || 'Watch';
+    hint.textContent = row.classList.contains('expanded') ? '' : hint.dataset.label;
+  }
   // a self-hosted video keeps playing when its row folds away — stop it
   if (!row.classList.contains('expanded')) row.querySelectorAll('.work-video-inner video').forEach(v => v.pause());
 }
@@ -21,7 +25,7 @@ function toggleRow(row) {
 document.querySelectorAll('.work-row').forEach(row => {
   row.addEventListener('click', (e) => {
     // Don't toggle if clicking inside an expanded iframe
-    if (row.classList.contains('expanded') && e.target.closest('.work-video-inner')) return;
+    if (row.classList.contains('expanded') && e.target.closest('.work-video-inner, .work-note')) return;
     toggleRow(row);
   });
 });

@@ -302,7 +302,26 @@ nav a:hover { opacity: 1; }
   position: relative;
 }
 
-.work-row.expanded .work-video { max-height: 900px; }
+.work-row.expanded .work-video { max-height: 2000px; }
+
+/* Per-film notes: a quiet line above the picture, a sentence and the tools below */
+.work-meta {
+  display: flex; flex-wrap: wrap; gap: 6px 28px; margin: 4px 0 16px 48px;
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+}
+.work-video-inner + .work-caption { margin-top: -6px; }
+.work-caption {
+  margin: 0 0 6px 48px; max-width: 560px;
+  font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.45);
+}
+.work-tools {
+  margin: 0 0 28px 48px;
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(255,255,255,0.36);
+}
+.work-note { cursor: default; }
+.wall-inner .work-tools { margin: 8px 0 0; }
 
 
 .work-video::after {
@@ -901,6 +920,8 @@ footer {
 
   .work-index { padding: 60px 16px 60px; }
   .work-video-inner { margin-left: 0; width: 100%; }
+  .work-meta, .work-caption, .work-tools { margin-left: 0; }
+  .work-meta { gap: 4px 18px; }
   .work-video::after { left: 0; }
   .work-title { font-size: 20px; }
 
